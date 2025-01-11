@@ -27,4 +27,6 @@ server.add_middleware(
 server.include_router(auth.router)
 
 authenticated_router = APIRouter(prefix="", dependencies=[Depends(add_current_user)])
+authenticated_router.include_router(auth.authenticated_router)
+
 server.include_router(authenticated_router)

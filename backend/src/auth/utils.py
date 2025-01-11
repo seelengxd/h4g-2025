@@ -11,7 +11,7 @@ from src.utils.mail import send_email
 def create_token(user: User, response: Response):
     access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
     access_token = create_access_token(
-        data={"sub": user.id}, expires_delta=access_token_expires
+        data={"sub": str(user.id)}, expires_delta=access_token_expires
     )
 
     response.set_cookie(key="session", value=access_token)

@@ -41,3 +41,13 @@ export type LogInAuthLoginPostData = {
 export type LogInAuthLoginPostResponse = (Token);
 
 export type LogInAuthLoginPostError = (HTTPValidationError);
+
+export type LogoutAuthLogoutGetResponse = (unknown);
+
+export type LogoutAuthLogoutGetError = unknown;
+
+export type GetUserAuthSessionGetData = unknown;
+
+export type GetUserAuthSessionGetResponse = (UserPublic);
+
+export type GetUserAuthSessionGetError = (HTTPValidationError);

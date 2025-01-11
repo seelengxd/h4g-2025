@@ -98,7 +98,8 @@ async def add_current_user(
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
         id = payload.get("sub")
         with Session(engine) as session:
-            user = session.scalar(select(User).where(User.id == id))
+            user = session.scalar(select(User).where(User.id == int(id)))
+
         if not user:
             raise InvalidTokenError()
 

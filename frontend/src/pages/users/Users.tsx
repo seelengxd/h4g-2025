@@ -5,6 +5,7 @@ import { getUsers } from "@/features/users/queries";
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import { GoChevronRight, GoPerson, GoPersonAdd } from "react-icons/go";
+import { Link } from "react-router";
 
 const Users = () => {
   const { data: users } = useQuery(getUsers());
@@ -52,7 +53,9 @@ const Users = () => {
                 </div>
                 <div className="flex items-center gap-2">
                   <span className="text-slate-500">{user.points} PTS</span>
-                  <GoChevronRight className="w-6 h-6" />
+                  <Link to={`/users/${user.id}`}>
+                    <GoChevronRight className="w-6 h-6" />
+                  </Link>
                 </div>
               </div>
             ))}

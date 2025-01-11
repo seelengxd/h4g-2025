@@ -45,7 +45,7 @@ def create_user(
 def get_user(
     user_id: int, session: Annotated[Session, Depends(get_session)]
 ) -> UserPublic:
-    user = session.scalar(select(User).where(User.id == user_id)).first()
+    user = session.scalar(select(User).where(User.id == user_id))
     if not user:
         raise HTTPException(status_code=404, detail="User not found")
     return user
@@ -57,7 +57,7 @@ def update_user(
     data: UserUpdate,
     session: Annotated[Session, Depends(get_session)],
 ):
-    user = session.scalar(select(User).where(User.id == user_id)).first()
+    user = session.scalar(select(User).where(User.id == user_id))
     if not user:
         raise HTTPException(status_code=404, detail="User not found")
 
@@ -65,6 +65,8 @@ def update_user(
     user.suspended = data.suspended
     user.role = data.role
     user.username = data.username
+    if data.password is not None:
+        user.hashed_password = get_password_hash(data.password)
 
     session.commit()
     return user

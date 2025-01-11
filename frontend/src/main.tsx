@@ -8,6 +8,7 @@ import { StoreProvider } from "@/store/store-provider.tsx";
 import Login from "./pages/Login";
 import Layout from "./components/layout/layout";
 import Users from "./pages/users/Users";
+import User from "./pages/users/User";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
@@ -18,6 +19,7 @@ createRoot(document.getElementById("root")!).render(
             <Route path="login" element={<Login />} />
             <Route path="users">
               <Route index element={<Users />} />
+              <Route path=":id" element={<User />} />
             </Route>
           </Route>
         </Routes>

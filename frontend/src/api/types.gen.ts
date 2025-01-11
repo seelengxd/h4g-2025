@@ -33,6 +33,7 @@ export type UserPublic = {
     full_name: string;
     username: string;
     points: number;
+    suspended: boolean;
 };
 
 export type UserUpdate = {
@@ -40,6 +41,7 @@ export type UserUpdate = {
     username: string;
     full_name: string;
     suspended: boolean;
+    password?: (string | null);
 };
 
 export type ValidationError = {

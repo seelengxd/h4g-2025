@@ -66,7 +66,7 @@ const NewUserFormDialog: React.FC<PropsWithChildren> = ({ children }) => {
       }}
     >
       <DialogTrigger asChild>{children}</DialogTrigger>
-      <DialogContent className="sm:max-w-[425px] bg-slate-50">
+      <DialogContent>
         {password && (
           <div>
             {form.getValues("full_name")}'s password: {password}. Please note it

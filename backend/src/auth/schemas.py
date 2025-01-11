@@ -11,6 +11,7 @@ class UserPublic(BaseModel):
     full_name: str
     username: str
     points: int
+    suspended: bool
 
 
 class Token(BaseModel):
@@ -27,6 +28,7 @@ class UserCreate(BaseModel):
 
 class UserUpdate(UserCreate):
     suspended: bool
+    password: str | None = None
 
 
 class PasswordResetRequestData(BaseModel):

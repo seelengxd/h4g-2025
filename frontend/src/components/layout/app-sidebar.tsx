@@ -25,7 +25,7 @@ import { Badge } from "../ui/badge";
 
 const SIDEBAR_ITEMS = [
   { path: "/users", icon: <GoPeople />, label: "Users" },
-  { path: "/shop", icon: <GoDatabase />, label: "Shop" },
+  { path: "/products", icon: <GoDatabase />, label: "Shop" },
   { path: "/reports", icon: <GoGraph />, label: "Reports" },
   { path: "/audit", icon: <GoTable />, label: "Audit" },
 ];

@@ -13,8 +13,26 @@ export type Body_log_in_auth_login_post = {
     client_secret?: (string | null);
 };
 
+export type Category = 'food' | 'nonfood' | 'special';
+
 export type HTTPValidationError = {
     detail?: Array<ValidationError>;
+};
+
+export type ProductCreate = {
+    category: Category;
+    image?: (string | null);
+    points: number;
+    total_qty: number;
+};
+
+export type ProductPublic = {
+    id: number;
+    category: Category;
+    name: string;
+    image?: (string | null);
+    points: number;
+    total_qty: number;
 };
 
 export type Role = 'resident' | 'staff' | 'admin';
@@ -29,7 +47,7 @@ export type UserCreate = {
     role: Role;
     username: string;
     full_name: string;
-    image: string;
+    image?: (string | null);
 };
 
 export type UserPublic = {
@@ -46,7 +64,7 @@ export type UserUpdate = {
     role: Role;
     username: string;
     full_name: string;
-    image: string;
+    image?: (string | null);
     suspended: boolean;
     password?: (string | null);
 };
@@ -117,3 +135,38 @@ export type CreateFileFilesPostData = {
 export type CreateFileFilesPostResponse = (unknown);
 
 export type CreateFileFilesPostError = (HTTPValidationError);
+
+export type GetAllProductsProductsGetData = unknown;
+
+export type GetAllProductsProductsGetResponse = (Array<ProductPublic>);
+
+export type GetAllProductsProductsGetError = (HTTPValidationError);
+
+export type CreateProductProductsPostData = {
+    body: ProductCreate;
+};
+
+export type CreateProductProductsPostResponse = (ProductPublic);
+
+export type CreateProductProductsPostError = (HTTPValidationError);
+
+export type GetProductProductsProductIdGetData = {
+    path: {
+        product_id: number;
+    };
+};
+
+export type GetProductProductsProductIdGetResponse = (ProductPublic);
+
+export type GetProductProductsProductIdGetError = (HTTPValidationError);
+
+export type UpdateProductProductsProductIdPutData = {
+    body: ProductCreate;
+    path: {
+        product_id: number;
+    };
+};
+
+export type UpdateProductProductsProductIdPutResponse = (ProductPublic);
+
+export type UpdateProductProductsProductIdPutError = (HTTPValidationError);

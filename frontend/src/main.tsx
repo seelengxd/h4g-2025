@@ -9,6 +9,7 @@ import Login from "./pages/Login";
 import Layout from "./components/layout/layout";
 import Users from "./pages/users/users";
 import User from "./pages/users/user";
+import Products from "./pages/products/products";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
@@ -20,6 +21,10 @@ createRoot(document.getElementById("root")!).render(
             <Route path="users">
               <Route index element={<Users />} />
               <Route path=":id" element={<User />} />
+            </Route>
+            <Route path="products">
+              <Route index element={<Products />} />
+              {/* <Route path=":id" element={<Product />} /> */}
             </Route>
           </Route>
         </Routes>

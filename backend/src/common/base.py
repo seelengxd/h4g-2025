@@ -9,3 +9,8 @@ class Base(DeclarativeBase):
         DateTime, server_default=func.now(), onupdate=func.now()
     )
     deleted_at: Mapped[datetime] = mapped_column(DateTime, nullable=True)
+
+    def update(self, **kwargs):
+        for key, value in kwargs.items():
+            if hasattr(self, key):
+                setattr(self, key, value)

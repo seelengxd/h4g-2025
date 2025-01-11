@@ -3,7 +3,7 @@ from typing import Annotated
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy import select
 
-from src.auth.dependencies import get_password_hash, must_be_staff
+from src.auth.dependencies import get_password_hash
 from src.common.dependencies import get_session
 from src.auth.models import Role, User
 from src.auth.schemas import UserCreate, UserPublic, UserUpdate

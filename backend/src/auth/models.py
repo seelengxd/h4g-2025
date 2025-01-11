@@ -1,5 +1,3 @@
-import sqlalchemy as sa
-
 from src.common.base import Base
 from sqlalchemy.orm import Mapped, mapped_column
 from enum import Enum

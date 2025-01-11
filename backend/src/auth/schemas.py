@@ -25,7 +25,7 @@ class UserCreate(BaseModel):
     role: Role
     username: str
     full_name: str
-    image: str
+    image: str | None = None
 
 
 class UserUpdate(UserCreate):

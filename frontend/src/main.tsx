@@ -7,8 +7,8 @@ import { BrowserRouter, Routes, Route } from "react-router";
 import { StoreProvider } from "@/store/store-provider.tsx";
 import Login from "./pages/Login";
 import Layout from "./components/layout/layout";
-import Users from "./pages/users/Users";
-import User from "./pages/users/User";
+import Users from "./pages/users/users";
+import User from "./pages/users/user";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>

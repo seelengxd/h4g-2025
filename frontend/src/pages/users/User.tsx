@@ -4,6 +4,7 @@ import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { getUser, useUpdateUser } from "@/features/users/queries";
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
+import { GoPerson } from "react-icons/go";
 import { useParams } from "react-router";
 
 const getRandomPassword = () => {
@@ -64,20 +65,31 @@ const User = () => {
         </Dialog>
       )}
       {/* User data */}
-      <div>
+      <div className="flex gap-4">
+        {user.image ? (
+          <img
+            src={import.meta.env.VITE_BACKEND_URL + "/uploads/" + user.image}
+            alt="user"
+            className="w-20 h-20 rounded-full"
+          />
+        ) : (
+          <GoPerson className="w-20 h-20" />
+        )}
         <div>
-          <span className="text-2xl font-light">{user.full_name} </span>
-          <span className="italic">[@{user.username}]</span>
-        </div>
-        <span className="text-slate-500">{user.points} PTS</span>
-        <div>
-          {user.suspended ? (
-            <Badge variant={"destructive"} className="bg-red-300">
-              Suspended
-            </Badge>
-          ) : (
-            <Badge variant={"outline"}>Active</Badge>
-          )}
+          <div>
+            <span className="text-2xl font-light">{user.full_name} </span>
+            <span className="italic">[@{user.username}]</span>
+          </div>
+          <span className="text-slate-500">{user.points} PTS</span>
+          <div>
+            {user.suspended ? (
+              <Badge variant={"destructive"} className="bg-red-300">
+                Suspended
+              </Badge>
+            ) : (
+              <Badge variant={"outline"}>Active</Badge>
+            )}
+          </div>
         </div>
       </div>
       <hr className="mt-6" />

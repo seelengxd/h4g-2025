@@ -40,8 +40,12 @@ export const getUser = (id: number) => {
 export const useCreateUser = () => {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: (data: { full_name: string; username: string; role: Role }) =>
-      createUserUsersPost({ body: data }),
+    mutationFn: (data: {
+      full_name: string;
+      username: string;
+      role: Role;
+      image?: string;
+    }) => createUserUsersPost({ body: data }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: [UserQueryKeys.Users] });
     },

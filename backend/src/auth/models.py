@@ -19,6 +19,7 @@ class User(Base):
 
     username: Mapped[str] = mapped_column(nullable=False, unique=True)
     hashed_password: Mapped[str] = mapped_column(nullable=False)
+    image: Mapped[str | None] = mapped_column(nullable=True)
 
     full_name: Mapped[str] = mapped_column(nullable=False)
 

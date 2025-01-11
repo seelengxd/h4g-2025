@@ -15,10 +15,14 @@ import { SubmitHandler, useForm } from "react-hook-form";
 import { z } from "zod";
 import { useCreateUser } from "./queries";
 import ErrorAlert from "@/components/form/fields/error-alert";
+import FileField from "@/components/form/fields/file-field";
+import { uploadFile } from "../files/utils";
 
 const newUserFormSchema = z.object({
   full_name: z.string(),
   username: z.string(),
+  file: z.string().optional(),
+  image: z.string().optional(),
 });
 
 type NewUserForm = z.infer<typeof newUserFormSchema>;
@@ -37,7 +41,7 @@ const NewUserFormDialog: React.FC<PropsWithChildren> = ({ children }) => {
   const createUserMutation = useCreateUser();
 
   const onSubmit: SubmitHandler<NewUserForm> = async (data) => {
-    createUserMutation.mutate(
+    await createUserMutation.mutate(
       { ...data, role: "resident" },
       {
         onSettled: (response) => {
@@ -51,6 +55,8 @@ const NewUserFormDialog: React.FC<PropsWithChildren> = ({ children }) => {
       }
     );
   };
+
+  console.log(form.getValues("file"));
 
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -66,7 +72,7 @@ const NewUserFormDialog: React.FC<PropsWithChildren> = ({ children }) => {
       }}
     >
       <DialogTrigger asChild>{children}</DialogTrigger>
-      <DialogContent>
+      <DialogContent className="bg-white">
         {password && (
           <div>
             {form.getValues("full_name")}'s password: {password}. Please note it
@@ -76,13 +82,33 @@ const NewUserFormDialog: React.FC<PropsWithChildren> = ({ children }) => {
         {error && <ErrorAlert message={error} />}
         {!password && (
           <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)}>
+            <form
+              encType="multipart/form-data"
+              onSubmit={form.handleSubmit(onSubmit)}
+            >
               <DialogHeader>
                 <DialogTitle>Add resident</DialogTitle>
               </DialogHeader>
               <div className="grid gap-4 py-4">
                 <TextField name="full_name" label="Full name" horizontal />
                 <TextField name="username" label="Username" horizontal />
+                <FileField
+                  name="file"
+                  label="Profile picture"
+                  horizontal
+                  onChange={async (e) => {
+                    e.persist();
+                    if (!e.target.files) {
+                      return;
+                    }
+                    const file = e.target.files[0];
+                    console.log("b");
+                    const filename = (await uploadFile(file)) as string;
+                    console.log(filename);
+
+                    form.setValue("image", filename);
+                  }}
+                />
               </div>
               <DialogFooter>
                 <Button type="submit">Submit</Button>

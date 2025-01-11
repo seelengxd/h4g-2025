@@ -4,10 +4,13 @@ from fastapi.middleware.cors import CORSMiddleware
 
 import logging
 
+from fastapi.staticfiles import StaticFiles
+
 from src.auth.dependencies import add_current_user
 from src.common.constants import FRONTEND_URL
 from src.auth import router as auth
 from src.users import router as users
+from src.files import router as files
 
 
 logging.getLogger("passlib").setLevel(logging.ERROR)
@@ -25,9 +28,12 @@ server.add_middleware(
     allow_headers=["*"],
 )
 
+server.mount("/uploads", StaticFiles(directory="uploads"), name="uploads")
 server.include_router(auth.router)
 
 authenticated_router = APIRouter(prefix="", dependencies=[Depends(add_current_user)])
 authenticated_router.include_router(auth.authenticated_router)
 authenticated_router.include_router(users.router)
+authenticated_router.include_router(files.router)
+
 server.include_router(authenticated_router)

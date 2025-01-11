@@ -12,6 +12,7 @@ class UserPublic(BaseModel):
     username: str
     points: int
     suspended: bool
+    image: str | None
 
 
 class Token(BaseModel):
@@ -24,6 +25,7 @@ class UserCreate(BaseModel):
     role: Role
     username: str
     full_name: str
+    image: str
 
 
 class UserUpdate(UserCreate):

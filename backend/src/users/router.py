@@ -34,6 +34,7 @@ def create_user(
         full_name=data.full_name,
         hashed_password=get_password_hash(random_password),
         suspended=False,
+        image=data.image,
     )
     session.add(new_user)
     session.commit()
@@ -65,6 +66,8 @@ def update_user(
     user.suspended = data.suspended
     user.role = data.role
     user.username = data.username
+    if data.image:
+        user.image = data.image
     if data.password is not None:
         user.hashed_password = get_password_hash(data.password)
 

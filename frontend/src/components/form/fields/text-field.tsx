@@ -9,6 +9,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { cn } from "@/lib/utils";
 
 interface TextFieldProps {
   name: string;
@@ -16,6 +17,7 @@ interface TextFieldProps {
   placeholder?: string;
   description?: string;
   className?: string;
+  horizontal?: boolean;
 }
 
 function TextField({
@@ -24,6 +26,7 @@ function TextField({
   placeholder,
   description,
   className,
+  horizontal,
 }: TextFieldProps) {
   const { control } = useFormContext();
   return (
@@ -32,9 +35,22 @@ function TextField({
       name={name}
       render={({ field }) => (
         <FormItem>
-          {label && <FormLabel className="!text-current">{label}</FormLabel>}
+          {label && !horizontal && (
+            <FormLabel className="!text-current">{label}</FormLabel>
+          )}
           <FormControl>
-            <Input placeholder={placeholder} {...field} className={className} />
+            <div className="grid items-center grid-cols-4 gap-4">
+              {label && horizontal && (
+                <FormLabel className="!text-current text-right">
+                  {label}
+                </FormLabel>
+              )}
+              <Input
+                placeholder={placeholder}
+                {...field}
+                className={cn("col-span-3", className)}
+              />
+            </div>
           </FormControl>
           <FormMessage />
           {description && <FormDescription>{description}</FormDescription>}

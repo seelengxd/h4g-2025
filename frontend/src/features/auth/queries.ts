@@ -2,13 +2,13 @@ import { queryOptions } from "@tanstack/react-query";
 
 import { getUserAuthSessionGet } from "@/api";
 
-export enum UserQueryKeys {
+export enum AuthQueryKeys {
   UserProfile = "user_profile",
 }
 
 export const getUserProfile = () => {
   return queryOptions({
-    queryKey: [UserQueryKeys.UserProfile],
+    queryKey: [AuthQueryKeys.UserProfile],
     queryFn: () =>
       getUserAuthSessionGet({ withCredentials: true }).then(
         (response) => response.data

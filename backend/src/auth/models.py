@@ -23,3 +23,4 @@ class User(Base):
     full_name: Mapped[str] = mapped_column(nullable=False)
 
     points: Mapped[int] = mapped_column(server_default="0", nullable=False)
+    suspended: Mapped[bool] = mapped_column(server_default="false", nullable=False)

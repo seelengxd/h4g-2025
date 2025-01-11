@@ -9,6 +9,7 @@ class UserPublic(BaseModel):
     id: int
     role: Role
     full_name: str
+    username: str
     points: int
 
 
@@ -18,9 +19,14 @@ class Token(BaseModel):
     user: UserPublic
 
 
-class SignUpData(BaseModel):
-    email: EmailStr
-    password: str = Field(min_length=6)
+class UserCreate(BaseModel):
+    role: Role
+    username: str
+    full_name: str
+
+
+class UserUpdate(UserCreate):
+    suspended: bool
 
 
 class PasswordResetRequestData(BaseModel):

@@ -32,10 +32,7 @@ const Layout: React.FC<PropsWithChildren> = () => {
         {user && (
           <SidebarProvider>
             <AppSidebar pathname={pathname} />
-            <main className="w-full">
-              <div className="flex justify-between">
-                <SidebarTrigger />
-              </div>
+            <main className="w-full p-4">
               <Outlet />
             </main>
           </SidebarProvider>

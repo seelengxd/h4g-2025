@@ -7,6 +7,7 @@ import { BrowserRouter, Routes, Route } from "react-router";
 import { StoreProvider } from "@/store/store-provider.tsx";
 import Login from "./pages/Login";
 import Layout from "./components/layout/layout";
+import Users from "./pages/users/Users";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
@@ -15,6 +16,9 @@ createRoot(document.getElementById("root")!).render(
         <Routes>
           <Route path="/" element={<Layout />}>
             <Route path="login" element={<Login />} />
+            <Route path="users">
+              <Route index element={<Users />} />
+            </Route>
           </Route>
         </Routes>
       </BrowserRouter>

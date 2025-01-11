@@ -21,11 +21,25 @@ export type Token = {
     user: UserPublic;
 };
 
+export type UserCreate = {
+    role: Role;
+    username: string;
+    full_name: string;
+};
+
 export type UserPublic = {
     id: number;
     role: Role;
     full_name: string;
+    username: string;
     points: number;
+};
+
+export type UserUpdate = {
+    role: Role;
+    username: string;
+    full_name: string;
+    suspended: boolean;
 };
 
 export type ValidationError = {
@@ -51,3 +65,38 @@ export type GetUserAuthSessionGetData = unknown;
 export type GetUserAuthSessionGetResponse = (UserPublic);
 
 export type GetUserAuthSessionGetError = (HTTPValidationError);
+
+export type GetAllUsersUsersGetData = unknown;
+
+export type GetAllUsersUsersGetResponse = (Array<UserPublic>);
+
+export type GetAllUsersUsersGetError = (HTTPValidationError);
+
+export type CreateUserUsersPostData = {
+    body: UserCreate;
+};
+
+export type CreateUserUsersPostResponse = (string);
+
+export type CreateUserUsersPostError = (HTTPValidationError);
+
+export type GetUserUsersUserIdGetData = {
+    path: {
+        user_id: number;
+    };
+};
+
+export type GetUserUsersUserIdGetResponse = (UserPublic);
+
+export type GetUserUsersUserIdGetError = (HTTPValidationError);
+
+export type UpdateUserUsersUserIdPutData = {
+    body: UserUpdate;
+    path: {
+        user_id: number;
+    };
+};
+
+export type UpdateUserUsersUserIdPutResponse = (unknown);
+
+export type UpdateUserUsersUserIdPutError = (HTTPValidationError);

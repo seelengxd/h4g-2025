@@ -21,6 +21,7 @@ import {
 } from "@/components/ui/sidebar";
 
 import { useUserStore } from "@/store/user/user-store-provider";
+import { Badge } from "../ui/badge";
 
 const SIDEBAR_ITEMS = [
   { path: "/users", icon: <GoPeople />, label: "Users" },
@@ -48,7 +49,7 @@ const AppSidebar: React.FC<OwnProps> = ({ pathname }) => {
   };
 
   return (
-    <Sidebar className="bg-[#2e2931]">
+    <Sidebar>
       <SidebarContent>
         <SidebarGroup>
           <SidebarHeader>
@@ -61,7 +62,6 @@ const AppSidebar: React.FC<OwnProps> = ({ pathname }) => {
               </SidebarMenuItem>
             </SidebarMenu>
           </SidebarHeader>
-
           <SidebarMenu>
             {SIDEBAR_ITEMS.map(({ icon, label, path }) => (
               <SidebarMenuItem key={label}>
@@ -82,7 +82,8 @@ const AppSidebar: React.FC<OwnProps> = ({ pathname }) => {
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <SidebarMenuButton>
-                  <User2 /> {user.full_name}
+                  <User2 /> {user.full_name}{" "}
+                  <Badge className="bg-blue-200 rounded-md">{user.role}</Badge>
                   <ChevronUp className="ml-auto" />
                 </SidebarMenuButton>
               </DropdownMenuTrigger>

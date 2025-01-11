@@ -7,7 +7,7 @@ from fastapi import Cookie, Depends, HTTPException, Request, status
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 from src.common.database import engine
-from .models import User
+from .models import Role, User
 import jwt
 from jwt.exceptions import InvalidTokenError
 from src.common.constants import SECRET_KEY
@@ -113,3 +113,12 @@ async def get_current_user(
     request: Request,
 ):
     return request.state.user
+
+
+async def must_be_staff(user: Annotated[User, Depends(get_current_user)]):
+    if user.role not in (Role.ADMIN, Role.STAFF):
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="You do not have permission to perform this action",
+        )
+    return user

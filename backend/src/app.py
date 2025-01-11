@@ -7,6 +7,7 @@ import logging
 from src.auth.dependencies import add_current_user
 from src.common.constants import FRONTEND_URL
 from src.auth import router as auth
+from src.users import router as users
 
 
 logging.getLogger("passlib").setLevel(logging.ERROR)
@@ -28,5 +29,5 @@ server.include_router(auth.router)
 
 authenticated_router = APIRouter(prefix="", dependencies=[Depends(add_current_user)])
 authenticated_router.include_router(auth.authenticated_router)
-
+authenticated_router.include_router(users.router)
 server.include_router(authenticated_router)

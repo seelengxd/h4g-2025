@@ -49,7 +49,7 @@ def update_product(
     product = session.scalar(select(Product).where(Product.id == product_id))
     if not product:
         raise HTTPException(status_code=404, detail="Product not found")
-    product.update(data.model_dump(exclude_unset=True))
+    product.update(**data.model_dump(exclude_unset=True))
     session.add(product)
     session.commit()
     session.refresh(product)

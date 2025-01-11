@@ -1,14 +1,22 @@
 import { PropsWithChildren, useState } from "react";
 import { SubmitHandler } from "react-hook-form";
-import { useCreateProduct } from "./queries";
+import { useUpdateProduct } from "./queries";
 
 import ProductFormDialog, { ProductForm } from "./product-form";
+import { ProductPublic } from "@/api";
 
-const NewProductFormDialog: React.FC<PropsWithChildren> = ({ children }) => {
-  const createProductMutation = useCreateProduct();
+type OwnProps = {
+  product: ProductPublic;
+};
+
+const UpdateProductFormDialog: React.FC<PropsWithChildren & OwnProps> = ({
+  children,
+  product,
+}) => {
+  const updateProductMutation = useUpdateProduct(product.id);
 
   const onSubmit: SubmitHandler<ProductForm> = async (data) => {
-    await createProductMutation.mutate(
+    await updateProductMutation.mutate(
       { ...data },
       {
         onSettled: (response) => {
@@ -25,10 +33,16 @@ const NewProductFormDialog: React.FC<PropsWithChildren> = ({ children }) => {
   const [error, setError] = useState("");
 
   return (
-    <ProductFormDialog onSubmit={onSubmit} error={error} setError={setError}>
+    <ProductFormDialog
+      onSubmit={onSubmit}
+      error={error}
+      setError={setError}
+      defaultValues={product}
+      title={`Edit product - ${product.name}`}
+    >
       {children}
     </ProductFormDialog>
   );
 };
 
-export default NewProductFormDialog;
+export default UpdateProductFormDialog;

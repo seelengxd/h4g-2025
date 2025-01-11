@@ -6,6 +6,7 @@ import { getProducts } from "@/features/products/queries";
 import { useQuery } from "@tanstack/react-query";
 import { ListPlus } from "lucide-react";
 import { useState } from "react";
+import { Link } from "react-router";
 
 const Products = () => {
   const [search, setSearch] = useState("");
@@ -29,8 +30,9 @@ const Products = () => {
             setSearch(e.target.value);
           }}
         />
-        <hr className="my-4" />
       </div>
+      <hr className="my-4" />
+      {/* TODO: add filter for product categories */}
       <div className="grid justify-around gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 2xl:grid-cols-7">
         {products &&
           products
@@ -38,22 +40,24 @@ const Products = () => {
               product.name.toLowerCase().includes(search.toLowerCase())
             )
             .map((product) => (
-              <Card className="p-4 w-fit">
-                <img
-                  src={
-                    import.meta.env.VITE_BACKEND_URL +
-                    "/uploads/" +
-                    product.image
-                  }
-                  className="object-contain w-40 h-40"
-                />
-                <div className="mt-2 font-bold">{product.points} Pts </div>
-                <div className="font-light">{product.name}</div>
-                {/* TODO: account for reserved qty */}
-                <div className="text-sm text-slate-500">
-                  {product.total_qty} left
-                </div>
-              </Card>
+              <Link to={`/products/${product.id}`} key={product.id}>
+                <Card className="p-4 w-fit">
+                  <img
+                    src={
+                      import.meta.env.VITE_BACKEND_URL +
+                      "/uploads/" +
+                      product.image
+                    }
+                    className="object-contain w-40 h-40"
+                  />
+                  <div className="mt-2 font-bold">{product.points} Pts </div>
+                  <div className="font-light">{product.name}</div>
+                  {/* TODO: account for reserved qty */}
+                  <div className="text-sm text-slate-500">
+                    {product.total_qty} left
+                  </div>
+                </Card>
+              </Link>
             ))}
       </div>
     </>

@@ -98,8 +98,12 @@ const User = () => {
           Manage resident
         </h3>
         <div className="grid sm:grid-cols-2 sm:gap-4">
-          <Button onClick={resetPassword}>Reset Password</Button>
-          <Button onClick={toggleSuspension}>Suspend</Button>
+          <Button variant={"secondary"} onClick={resetPassword}>
+            Reset Password
+          </Button>
+          <Button variant={"secondary"} onClick={toggleSuspension}>
+            Suspend
+          </Button>
         </div>
       </div>
       <hr className="mt-6" />

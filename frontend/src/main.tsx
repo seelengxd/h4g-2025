@@ -11,8 +11,8 @@ import Users from "./pages/users/users";
 import User from "./pages/users/user";
 import Products from "./pages/products/products";
 import Product from "./pages/products/product";
-import Home from "./pages/home/home";
 import Cart from "./pages/orders/cart";
+import Home from "./pages/home/Home";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
@@ -20,7 +20,7 @@ createRoot(document.getElementById("root")!).render(
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Layout />}>
-            <Route path="home" element={<Home />} />
+            <Route index element={<Home />} />
             <Route path="login" element={<Login />} />
             <Route path="users">
               <Route index element={<Users />} />

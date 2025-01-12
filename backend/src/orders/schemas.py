@@ -1,10 +1,11 @@
 from pydantic import BaseModel, ConfigDict, Field
 
+from src.audit_logs.schemas import AuditLogPublic
 from src.orders.models import OrderState
-from src.products.schemas import ProductPublic
+from src.products.schemas import MiniProductPublic
 
 
-class OrderPublic(BaseModel):
+class MiniOrderPublic(BaseModel):
     model_config = ConfigDict(from_attributes=True)
 
     id: int
@@ -12,10 +13,14 @@ class OrderPublic(BaseModel):
     state: OrderState
 
 
+class OrderPublic(MiniOrderPublic):
+    logs: list[AuditLogPublic]
+
+
 class OrderProductPublic(BaseModel):
     model_config = ConfigDict(from_attributes=True)
 
-    product: ProductPublic
+    product: MiniProductPublic
     points: int
     qty: int
 

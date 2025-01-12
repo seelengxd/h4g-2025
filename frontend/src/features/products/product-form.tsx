@@ -23,7 +23,7 @@ import { DialogClose } from "@radix-ui/react-dialog";
 const productFormSchema = z.object({
   name: z.string(),
   file: z.string().optional(),
-  image: z.string().optional(),
+  image: z.string().optional().nullable(),
   total_qty: z.coerce.number().min(0),
   points: z.coerce.number().min(0),
   category: z.enum(["food", "nonfood", "special"]),
@@ -63,7 +63,6 @@ const ProductFormDialog: React.FC<PropsWithChildren & OwnProps> = ({
     <Dialog
       onOpenChange={(open) => {
         if (!open) {
-          form.reset();
           setError("");
         }
       }}

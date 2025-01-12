@@ -1,6 +1,7 @@
 import { OrderState } from "@/api";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import AuditLogTable from "@/features/audit-logs/audit-log-table";
 import { getOrder, useUpdateOrder } from "@/features/orders/queries";
 import ProductImage from "@/features/products/product-image";
 import { useCombinedStore } from "@/store/user/user-store-provider";
@@ -83,7 +84,7 @@ const Order = () => {
       </div>
       <div className="mt-4">
         <h2 className="text-lg font-light">Order history</h2>
-        {/* audit log for order */}
+        {order.logs && <AuditLogTable logs={order.logs} />}
       </div>
     </div>
   );

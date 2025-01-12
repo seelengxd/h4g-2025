@@ -9,6 +9,7 @@ import { ChevronLeft, DollarSign, Luggage, Plus } from "lucide-react";
 import { GoPencil } from "react-icons/go";
 import { Link, Navigate, useParams } from "react-router";
 import ProductImage from "../../features/products/product-image";
+import AuditLogTable from "@/features/audit-logs/audit-log-table";
 
 const Product = () => {
   const { id } = useParams<"id">();
@@ -86,7 +87,11 @@ const Product = () => {
         <h3 className="mb-2 leading-4 tracking-tight text-slate-600">
           Audit Log
         </h3>
-        <div>Coming soon...</div>
+        {product.logs.length ? (
+          <AuditLogTable logs={product.logs} />
+        ) : (
+          <p className="text-sm">No logs.</p>
+        )}
       </div>
     </>
   );

@@ -1,9 +1,10 @@
 from enum import Enum
 
-from sqlalchemy import ForeignKey
+from sqlalchemy import ForeignKey, and_
+from src.audit_logs.models import AuditLog
 from src.auth.models import User
 from src.common.base import Base
-from sqlalchemy.orm import Mapped, relationship, mapped_column
+from sqlalchemy.orm import Mapped, relationship, mapped_column, foreign
 
 from src.products.models import Product
 
@@ -40,6 +41,13 @@ class Order(Base):
     user: Mapped[User] = relationship("User", backref="orders")
     order_products: Mapped[list["OrderProduct"]] = relationship(
         "OrderProduct", back_populates="order"
+    )
+    logs: Mapped[list["AuditLog"]] = relationship(
+        "AuditLog",
+        backref="order",
+        primaryjoin=and_(
+            id == foreign(AuditLog.parent_id), AuditLog.parent_type == "order"
+        ),
     )
 
 

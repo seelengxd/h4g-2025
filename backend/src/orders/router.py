@@ -3,11 +3,12 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy import select
 from sqlalchemy.orm import Session, selectinload
 
+from src.audit_logs.models import AuditLog
 from src.auth.dependencies import get_current_user
 from src.auth.models import User
 from src.common.dependencies import get_session
 from src.orders.models import Order, OrderProduct, OrderState
-from src.orders.schemas import OrderCreate, OrderPublic, OrderUpdate
+from src.orders.schemas import OrderCreate, MiniOrderPublic, OrderPublic, OrderUpdate
 from src.products.models import Product
 
 
@@ -18,7 +19,7 @@ router = APIRouter(prefix="/orders", tags=["orders"])
 def get_all_orders(
     session: Annotated[Session, Depends(get_session)],
     user: Annotated[User, Depends(get_current_user)],
-) -> list[OrderPublic]:
+) -> list[MiniOrderPublic]:
     query = select(Order).options(
         selectinload(Order.order_products, OrderProduct.product)
     )
@@ -38,7 +39,10 @@ def get_order(
     query = (
         select(Order)
         .where(Order.id == order_id)
-        .options(selectinload(Order.order_products, OrderProduct.product))
+        .options(
+            selectinload(Order.order_products, OrderProduct.product),
+            selectinload(Order.logs),
+        )
     )
     order = session.scalar(query)
     if not order:
@@ -79,9 +83,17 @@ def create_order(
 
     session.add(order)
     session.add(user)
-
     session.commit()
     session.refresh(order)
+
+    order_log = AuditLog(
+        parent_type="order",
+        parent_id=order.id,
+        user_id=user.id,
+        action=f"{user.full_name} created the order.",
+    )
+    session.add(order_log)
+    session.commit()
 
     return order
 
@@ -109,6 +121,14 @@ def update_order(
     ):
         raise HTTPException(status_code=403, detail="Forbidden")
 
+    order_log = AuditLog(
+        parent_type="order",
+        parent_id=order.id,
+        user_id=user.id,
+        action=f"{user.full_name} changed the order state from {order.state.value.title()} to {data.state.value.title()}.",
+    )
+    session.add(order_log)
+
     order.state = data.state
 
     if data.state == OrderState.WITHDRAWN:
@@ -121,6 +141,14 @@ def update_order(
         for order_product in order.order_products:
             order_product.product.total_qty -= order_product.qty
             session.add(order_product.product)
+
+            product_log = AuditLog(
+                parent_type="product",
+                parent_id=order_product.product_id,
+                user_id=user.id,
+                action=f"{user.full_name} claimed {order_product.qty} {order_product.product.name} for Order #{order.id}.",
+            )
+            session.add(product_log)
 
     session.commit()
     session.refresh(order)

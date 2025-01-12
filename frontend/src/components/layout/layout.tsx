@@ -45,7 +45,7 @@ const Layout: React.FC<PropsWithChildren> = () => {
             </SidebarProvider>
           </div>
           <div className="md:hidden">
-            <div className="p-2 h-[calc(100vh-5rem)] overflow-y-scroll">
+            <div className="m-2 h-[calc(100vh-5rem)] overflow-y-scroll">
               <Outlet />
             </div>
             <MobileSidebar />

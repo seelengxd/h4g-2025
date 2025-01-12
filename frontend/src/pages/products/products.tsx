@@ -22,7 +22,7 @@ const Products = () => {
 
   return (
     <>
-      <div className="sticky top-0">
+      <div className="sticky top-0 bg-white">
         <div className="flex justify-between">
           <h1 className="text-2xl font-light">
             {isStaff ? "Manage inventory" : "Shop"}

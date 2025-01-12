@@ -1,10 +1,10 @@
 import { Link, useNavigate } from "react-router";
-import { SIDEBAR_ITEMS } from "./sidebar-items";
+import { ADMIN_SIDEBAR_ITEMS, RESIDENT_SIDEBAR_ITEMS } from "./sidebar-items";
 import { logoutAuthLogoutGet } from "@/api";
-import { useUserStore } from "@/store/user/user-store-provider";
+import { useCombinedStore } from "@/store/user/user-store-provider";
 
 const MobileSidebar = () => {
-  const { user, setUser } = useUserStore((store) => store);
+  const { user, setUser } = useCombinedStore((store) => store);
   const navigate = useNavigate();
 
   if (!user) {
@@ -18,10 +18,13 @@ const MobileSidebar = () => {
     navigate("/login");
   };
 
+  const sidebarItems =
+    user.role === "resident" ? RESIDENT_SIDEBAR_ITEMS : ADMIN_SIDEBAR_ITEMS;
+
   return (
     <div className="flex justify-around pt-2 mt-2 overflow-hidden border-t h-18">
-      {SIDEBAR_ITEMS.map(({ icon, label, path }) => (
-        <Link to={path}>
+      {sidebarItems.map(({ icon, label, path }) => (
+        <Link to={path} key={path}>
           <div className="flex flex-col items-center">
             {<icon.type className="w-6 h-6" />}
             <span className="text-sm">{label}</span>

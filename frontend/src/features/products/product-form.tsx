@@ -18,6 +18,7 @@ import FileField from "@/components/form/fields/file-field";
 import { uploadFile } from "../files/utils";
 import NumberField from "@/components/form/fields/number-field";
 import SelectField from "@/components/form/fields/select-field";
+import { DialogClose } from "@radix-ui/react-dialog";
 
 const productFormSchema = z.object({
   name: z.string(),
@@ -121,7 +122,9 @@ const ProductFormDialog: React.FC<PropsWithChildren & OwnProps> = ({
               />
             </div>
             <DialogFooter>
-              <Button type="submit">Submit</Button>
+              <DialogClose asChild>
+                <Button type="submit">Submit</Button>
+              </DialogClose>
             </DialogFooter>
           </form>
         </Form>

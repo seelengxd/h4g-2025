@@ -5,7 +5,7 @@ import qs from "qs";
 import { ReactNode } from "react";
 
 import { client } from "@/api";
-import { UserStoreProvider } from "@/store/user/user-store-provider";
+import { CombinedStoreProvider } from "@/store/user/user-store-provider";
 
 const queryClient = new QueryClient();
 
@@ -20,7 +20,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <UserStoreProvider>{children}</UserStoreProvider>
+      <CombinedStoreProvider>{children}</CombinedStoreProvider>
     </QueryClientProvider>
   );
 }

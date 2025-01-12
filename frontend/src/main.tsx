@@ -5,12 +5,14 @@ import { createRoot } from "react-dom/client";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router";
 
 import { StoreProvider } from "@/store/store-provider.tsx";
-import Login from "./pages/Login";
+import Login from "./pages/auth/login";
 import Layout from "./components/layout/layout";
 import Users from "./pages/users/users";
 import User from "./pages/users/user";
 import Products from "./pages/products/products";
 import Product from "./pages/products/product";
+import Home from "./pages/home/home";
+import Cart from "./pages/orders/cart";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
@@ -18,7 +20,7 @@ createRoot(document.getElementById("root")!).render(
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Layout />}>
-            <Route index element={<Navigate to="/products" />} />
+            <Route path="home" element={<Home />} />
             <Route path="login" element={<Login />} />
             <Route path="users">
               <Route index element={<Users />} />
@@ -28,6 +30,7 @@ createRoot(document.getElementById("root")!).render(
               <Route index element={<Products />} />
               <Route path=":id" element={<Product />} />
             </Route>
+            <Route path="cart" element={<Cart />} />
           </Route>
         </Routes>
       </BrowserRouter>

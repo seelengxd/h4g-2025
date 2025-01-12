@@ -1,14 +1,23 @@
 import { Button } from "@/components/ui/button";
-import { getProduct, useUpdateProduct } from "@/features/products/queries";
+import CartButton from "@/features/orders/cart-button";
+import OrderSheet from "@/features/orders/order-sheet";
+import { getProduct } from "@/features/products/queries";
 import UpdateProductFormDialog from "@/features/products/update-product-form";
+import { useCombinedStore } from "@/store/user/user-store-provider";
 import { useQuery } from "@tanstack/react-query";
-import { DollarSign, Luggage, Pencil } from "lucide-react";
-import { GoPencil, GoQuestion } from "react-icons/go";
-import { Navigate, useParams } from "react-router";
+import { ChevronLeft, DollarSign, Luggage, Plus } from "lucide-react";
+import { GoPencil } from "react-icons/go";
+import { Link, Navigate, useParams } from "react-router";
+import ProductImage from "../../features/products/product-image";
 
 const Product = () => {
   const { id } = useParams<"id">();
   const { data: product, isLoading } = useQuery(getProduct(Number(id)));
+  const user = useCombinedStore((store) => store.user);
+
+  if (!user) {
+    return;
+  }
 
   if (isLoading) {
     return null;
@@ -16,19 +25,22 @@ const Product = () => {
   if (!product) {
     return <Navigate to="/products" />;
   }
+
+  const isStaff = user.role !== "resident";
+
   return (
     <>
       {/* Display product data */}
-      <div className="flex gap-4">
-        {product.image ? (
-          <img
-            src={import.meta.env.VITE_BACKEND_URL + "/uploads/" + product.image}
-            alt="user"
-            className="w-40 h-40"
-          />
-        ) : (
-          <GoQuestion className="w-20 h-20" />
-        )}
+      <div className="flex justify-between">
+        <Link to="/products">
+          <Button variant={"secondary"}>
+            <ChevronLeft /> Back to shop
+          </Button>
+        </Link>
+        {!isStaff && <CartButton />}
+      </div>
+      <div className="flex gap-4 mt-4">
+        <ProductImage product={product} className="w-40 h-40" />
 
         <div className="pl-4 border-l">
           <div className="flex items-baseline gap-4">
@@ -42,12 +54,22 @@ const Product = () => {
             <Luggage className="w-4 h-4" />
             {product.total_qty} left
           </div>
-          <UpdateProductFormDialog product={product}>
-            <Button className="mt-4">
-              <GoPencil className="w-4 h-4" />
-              Edit product
-            </Button>
-          </UpdateProductFormDialog>
+          {isStaff && (
+            <UpdateProductFormDialog product={product}>
+              <Button className="mt-4">
+                <GoPencil className="w-4 h-4" />
+                Edit product
+              </Button>
+            </UpdateProductFormDialog>
+          )}
+          {!isStaff && (
+            <OrderSheet product={product}>
+              <Button className="mt-4">
+                <Plus className="w-4 h-4" />
+                Add to cart
+              </Button>
+            </OrderSheet>
+          )}
         </div>
       </div>
       {/* Past transactions */}

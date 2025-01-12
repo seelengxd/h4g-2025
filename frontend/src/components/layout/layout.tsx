@@ -4,7 +4,7 @@ import { Outlet, useLocation } from "react-router";
 
 import { Toaster } from "@/components/ui/toaster";
 import { getUserProfile } from "@/features/auth/queries";
-import { useUserStore } from "@/store/user/user-store-provider";
+import { useCombinedStore } from "@/store/user/user-store-provider";
 import { SidebarProvider, SidebarTrigger } from "../ui/sidebar";
 import AppSidebar from "./app-sidebar";
 import MobileSidebar from "./mobile-sidebar";
@@ -12,7 +12,7 @@ import MobileSidebar from "./mobile-sidebar";
 const Layout: React.FC<PropsWithChildren> = () => {
   const { data: userProfile, isLoading } = useQuery(getUserProfile());
 
-  const { user, setUser } = useUserStore((store) => store);
+  const { user, setUser } = useCombinedStore((store) => store);
   const { pathname } = useLocation();
 
   useEffect(() => {

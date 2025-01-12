@@ -19,16 +19,16 @@ import {
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
 
-import { useUserStore } from "@/store/user/user-store-provider";
+import { useCombinedStore } from "@/store/user/user-store-provider";
 import { Badge } from "../ui/badge";
-import { SIDEBAR_ITEMS } from "./sidebar-items";
+import { ADMIN_SIDEBAR_ITEMS, RESIDENT_SIDEBAR_ITEMS } from "./sidebar-items";
 
 type OwnProps = {
   pathname: string;
 };
 
 const AppSidebar: React.FC<OwnProps> = ({ pathname }) => {
-  const { user, setUser } = useUserStore((store) => store);
+  const { user, setUser } = useCombinedStore((store) => store);
   const navigate = useNavigate();
 
   if (!user) {
@@ -40,6 +40,9 @@ const AppSidebar: React.FC<OwnProps> = ({ pathname }) => {
     setUser();
     navigate("/login");
   };
+
+  const sidebarItems =
+    user.role === "resident" ? RESIDENT_SIDEBAR_ITEMS : ADMIN_SIDEBAR_ITEMS;
 
   return (
     <Sidebar>
@@ -56,7 +59,7 @@ const AppSidebar: React.FC<OwnProps> = ({ pathname }) => {
             </SidebarMenu>
           </SidebarHeader>
           <SidebarMenu>
-            {SIDEBAR_ITEMS.map(({ icon, label, path }) => (
+            {sidebarItems.map(({ icon, label, path }) => (
               <SidebarMenuItem key={label}>
                 <SidebarMenuButton asChild isActive={pathname === path}>
                   <Link to={path}>
@@ -76,7 +79,7 @@ const AppSidebar: React.FC<OwnProps> = ({ pathname }) => {
               <DropdownMenuTrigger asChild>
                 <SidebarMenuButton>
                   <User2 /> {user.full_name}{" "}
-                  <Badge className="bg-blue-200 rounded-md">{user.role}</Badge>
+                  <Badge className="rounded-md">{user.role}</Badge>
                   <ChevronUp className="ml-auto" />
                 </SidebarMenuButton>
               </DropdownMenuTrigger>

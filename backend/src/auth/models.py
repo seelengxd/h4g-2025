@@ -8,6 +8,9 @@ class Role(str, Enum):
     STAFF = "staff"
     ADMIN = "admin"
 
+    def is_staff(self):
+        return self in (Role.STAFF, Role.ADMIN)
+
 
 class User(Base):
     __tablename__ = "users"

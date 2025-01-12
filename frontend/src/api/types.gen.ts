@@ -19,8 +19,45 @@ export type HTTPValidationError = {
     detail?: Array<ValidationError>;
 };
 
+export type OrderCreate = {
+    order_products: Array<OrderProductCreate>;
+};
+
+export type OrderProductCreate = {
+    product_id: number;
+    qty: number;
+};
+
+export type OrderProductPublic = {
+    product: ProductPublic;
+    points: number;
+    qty: number;
+};
+
+export type OrderPublic = {
+    id: number;
+    order_products: Array<OrderProductPublic>;
+    state: OrderState;
+};
+
+/**
+ * Possible transitions:
+ *
+ * PENDING --> APPROVED --> CLAIMED
+ *
+ * PENDING --> REJECTED
+ *
+ * PENDING --> WITHDRAWN
+ */
+export type OrderState = 'pending' | 'approved' | 'rejected' | 'withdrawn' | 'claimed';
+
+export type OrderUpdate = {
+    state: OrderState;
+};
+
 export type ProductCreate = {
     category: Category;
+    name: string;
     image?: (string | null);
     points: number;
     total_qty: number;
@@ -170,3 +207,38 @@ export type UpdateProductProductsProductIdPutData = {
 export type UpdateProductProductsProductIdPutResponse = (ProductPublic);
 
 export type UpdateProductProductsProductIdPutError = (HTTPValidationError);
+
+export type GetAllOrdersOrdersGetData = unknown;
+
+export type GetAllOrdersOrdersGetResponse = (Array<OrderPublic>);
+
+export type GetAllOrdersOrdersGetError = (HTTPValidationError);
+
+export type CreateOrderOrdersPostData = {
+    body: OrderCreate;
+};
+
+export type CreateOrderOrdersPostResponse = (unknown);
+
+export type CreateOrderOrdersPostError = (HTTPValidationError);
+
+export type GetOrderOrdersOrderIdGetData = {
+    path: {
+        order_id: number;
+    };
+};
+
+export type GetOrderOrdersOrderIdGetResponse = (OrderPublic);
+
+export type GetOrderOrdersOrderIdGetError = (HTTPValidationError);
+
+export type UpdateOrderOrdersOrderIdPatchData = {
+    body: OrderUpdate;
+    path: {
+        order_id: number;
+    };
+};
+
+export type UpdateOrderOrdersOrderIdPatchResponse = (unknown);
+
+export type UpdateOrderOrdersOrderIdPatchError = (HTTPValidationError);

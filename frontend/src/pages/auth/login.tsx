@@ -6,7 +6,7 @@ import TextField from "@/components/form/fields/text-field";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Form } from "@/components/ui/form";
-import { useUserStore } from "@/store/user/user-store-provider";
+import { useCombinedStore } from "@/store/user/user-store-provider";
 import { useEffect, useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { useNavigate } from "react-router";
@@ -31,7 +31,7 @@ const Login = () => {
   });
 
   const [isError, setIsError] = useState(false);
-  const { user, setUser, isLoading } = useUserStore((store) => store);
+  const { user, setUser, isLoading } = useCombinedStore((store) => store);
   const navigate = useNavigate();
 
   useEffect(() => {

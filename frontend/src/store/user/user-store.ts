@@ -2,7 +2,7 @@ import { createStore } from "zustand";
 
 import { UserPublic } from "@/api";
 
-interface UserState {
+export interface UserState {
   user?: UserPublic;
   isLoading: boolean;
 }

@@ -1,8 +1,10 @@
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
+import CartButton from "@/features/orders/cart-button";
 import NewProductFormDialog from "@/features/products/new-product-form";
 import { getProducts } from "@/features/products/queries";
+import { useCombinedStore } from "@/store/user/user-store-provider";
 import { useQuery } from "@tanstack/react-query";
 import { ListPlus } from "lucide-react";
 import { useState } from "react";
@@ -11,16 +13,28 @@ import { Link } from "react-router";
 const Products = () => {
   const [search, setSearch] = useState("");
   const { data: products } = useQuery(getProducts());
+  const { user } = useCombinedStore((store) => store);
+
+  if (!user) {
+    return;
+  }
+  const isStaff = user.role !== "resident";
+
   return (
     <>
       <div className="sticky top-0">
         <div className="flex justify-between">
-          <h1 className="text-2xl font-light">Manage inventory</h1>
-          <NewProductFormDialog>
-            <Button>
-              <ListPlus /> Add product
-            </Button>
-          </NewProductFormDialog>
+          <h1 className="text-2xl font-light">
+            {isStaff ? "Manage inventory" : "Shop"}
+          </h1>
+          {isStaff && (
+            <NewProductFormDialog>
+              <Button>
+                <ListPlus /> Add product
+              </Button>
+            </NewProductFormDialog>
+          )}
+          {!isStaff && <CartButton />}
         </div>
         <Input
           placeholder="Search products"

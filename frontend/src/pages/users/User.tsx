@@ -83,9 +83,7 @@ const User = () => {
           <span className="text-slate-500">{user.points} PTS</span>
           <div>
             {user.suspended ? (
-              <Badge variant={"destructive"} className="bg-red-300">
-                Suspended
-              </Badge>
+              <Badge variant={"destructive"}>Suspended</Badge>
             ) : (
               <Badge variant={"outline"}>Active</Badge>
             )}

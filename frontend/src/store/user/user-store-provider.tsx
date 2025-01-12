@@ -1,31 +1,59 @@
 import { createContext, ReactNode, useContext, useRef } from "react";
-import { StoreApi, useStore } from "zustand";
+import { createStore, StoreApi, useStore } from "zustand";
 
-import { createUserStore, UserStore } from "@/store/user/user-store";
+import {
+  defaultUserState,
+  UserState,
+  UserStore,
+} from "@/store/user/user-store";
+import { CartState, CartStore, defaultCartState } from "../cart/cart-store";
+import { UserPublic } from "@/api";
+import { OrderProductCreate } from "@/api";
 
-export type UserStoreApi = StoreApi<UserStore>;
-export const UserStoreContext = createContext<UserStoreApi | null>(null);
+export type CombinedStore = UserStore & CartStore;
+export type CombinedStoreApi = StoreApi<CombinedStore>;
+export const StoreContext = createContext<CombinedStoreApi | null>(null);
 
-export const UserStoreProvider = ({ children }: { children: ReactNode }) => {
-  const storeRef = useRef<UserStoreApi>();
+export const createCombinedStore = (
+  initState: UserState & CartState = {
+    ...defaultUserState,
+    ...defaultCartState,
+  }
+) => {
+  return createStore<CombinedStore>()((set) => ({
+    ...initState,
+    setUser: (user?: UserPublic) => set(() => ({ user, isLoading: false })),
+    setCart: (cart?: OrderProductCreate[]) => set(() => ({ items: cart })),
+  }));
+};
+
+export const CombinedStoreProvider = ({
+  children,
+}: {
+  children: ReactNode;
+}) => {
+  const storeRef = useRef<CombinedStoreApi>();
 
   if (!storeRef.current) {
-    storeRef.current = createUserStore();
+    storeRef.current = createCombinedStore();
   }
 
   return (
-    <UserStoreContext.Provider value={storeRef.current}>
+    <StoreContext.Provider value={storeRef.current}>
       {children}
-    </UserStoreContext.Provider>
+    </StoreContext.Provider>
   );
 };
 
-export const useUserStore = <T,>(selector: (store: UserStore) => T): T => {
-  const userStoreContext = useContext(UserStoreContext);
+export const useCombinedStore = <T,>(
+  selector: (store: CombinedStore) => T
+): T => {
+  const userStoreContext = useContext(StoreContext);
 
   if (!userStoreContext) {
-    throw new Error(`useUserStore must be used within UserStoreProvider`);
+    throw new Error(
+      `useCombinedStore must be used within CombinedStoreProvider`
+    );
   }
-
   return useStore(userStoreContext, selector);
 };

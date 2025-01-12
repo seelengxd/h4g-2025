@@ -11,7 +11,7 @@ class Category(str, Enum):
     SPECIAL = "special"
 
     def __str__(self):
-        return self.value
+        return self.value.title()
 
 
 class Product(Base):

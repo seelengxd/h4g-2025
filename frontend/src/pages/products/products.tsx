@@ -44,8 +44,9 @@ const Products = () => {
             setSearch(e.target.value);
           }}
         />
+        <hr className="my-4" />
       </div>
-      <hr className="my-4" />
+
       {/* TODO: add filter for product categories */}
       <div className="grid justify-around gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 2xl:grid-cols-7">
         {products &&

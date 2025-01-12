@@ -87,11 +87,8 @@ const Product = () => {
         <h3 className="mb-2 leading-4 tracking-tight text-slate-600">
           Audit Log
         </h3>
-        {product.logs.length ? (
-          <AuditLogTable logs={product.logs} />
-        ) : (
-          <p className="text-sm">No logs.</p>
-        )}
+
+        <AuditLogTable logs={product.logs} />
       </div>
     </>
   );

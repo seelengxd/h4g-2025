@@ -15,6 +15,9 @@ type OwnProps = {
 };
 
 const AuditLogTable: React.FC<OwnProps> = ({ logs }) => {
+  if (logs.length === 0) {
+    return <p className="text-sm">No logs.</p>;
+  }
   return (
     <Table>
       <TableHeader>
@@ -26,10 +29,10 @@ const AuditLogTable: React.FC<OwnProps> = ({ logs }) => {
       <TableBody>
         {logs.map((log) => (
           <TableRow key={log.id}>
-            <TableCell>
-              {format(log.created_at, "ccc, dd MMM yyyy p")}
+            <TableCell className="w-fit text-nowrap">
+              {format(log.created_at, "dd MMM yyyy hh:mm a")}
             </TableCell>
-            <TableCell>{log.action}</TableCell>
+            <TableCell className="text-wrap">{log.action}</TableCell>
           </TableRow>
         ))}
       </TableBody>

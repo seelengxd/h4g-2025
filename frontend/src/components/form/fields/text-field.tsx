@@ -48,7 +48,13 @@ function TextField({
               <Input
                 placeholder={placeholder}
                 {...field}
-                className={cn("col-span-3", className)}
+                className={cn(
+                  {
+                    "col-span-3": label && horizontal,
+                    "col-span-4": !(label && horizontal),
+                  },
+                  className
+                )}
               />
             </div>
           </FormControl>

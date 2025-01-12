@@ -29,23 +29,29 @@ const Layout: React.FC<PropsWithChildren> = () => {
   return (
     <main className="relative flex flex-col w-screen h-screen p-2 overflow-y-scroll md:p-4">
       <Toaster />
-      <div className="hidden w-full max-h-screen md:flex">
-        {user && (
-          <SidebarProvider>
-            <AppSidebar pathname={pathname} />
-            <main className="w-full p-4">
-              <Outlet />
-            </main>
-          </SidebarProvider>
-        )}
-        {!user && <Outlet />}
-      </div>
-      <div className="md:hidden">
-        <div className="p-2 h-[calc(100vh-5rem)] overflow-y-scroll">
+      {!user && (
+        <div className="w-full max-h-screen">
           <Outlet />
         </div>
-        <MobileSidebar />
-      </div>
+      )}
+      {user && (
+        <>
+          <div className="hidden w-full max-h-screen md:flex">
+            <SidebarProvider>
+              <AppSidebar pathname={pathname} />
+              <main className="w-full p-4">
+                <Outlet />
+              </main>
+            </SidebarProvider>
+          </div>
+          <div className="md:hidden">
+            <div className="p-2 h-[calc(100vh-5rem)] overflow-y-scroll">
+              <Outlet />
+            </div>
+            <MobileSidebar />
+          </div>
+        </>
+      )}
     </main>
   );
 };

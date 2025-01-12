@@ -40,7 +40,6 @@ const Login = () => {
     }
   }, [user, navigate]);
 
-  console.log({ isLoading, user });
   if (isLoading || user) {
     return;
   }
@@ -61,10 +60,10 @@ const Login = () => {
     }
   };
   return (
-    <div className="flex justify-center items-center h-screen w-screen">
+    <div className="flex items-center justify-center w-screen h-screen">
       <main className="">
-        <h1 className="text-2xl">Minimart</h1>
-        <Card className="mt-8 p-8">
+        <h1 className="text-2xl text-center">MWH Minimart</h1>
+        <Card className="p-8 mt-8">
           <CardContent>
             <div className="space-y-6">
               {isError && (
@@ -83,10 +82,7 @@ const Login = () => {
                     <TextField label="Username" name="username" />
                     <PasswordField label="Password" name="password" />
                   </div>
-                  <Button
-                    className="w-full bg-blue-300 hover:opacity-80"
-                    type="submit"
-                  >
+                  <Button className="w-full hover:opacity-80" type="submit">
                     Log in
                   </Button>
                 </form>

@@ -13,7 +13,7 @@ const Products = () => {
   const { data: products } = useQuery(getProducts());
   return (
     <>
-      <div>
+      <div className="sticky top-0">
         <div className="flex justify-between">
           <h1 className="text-2xl font-light">Manage inventory</h1>
           <NewProductFormDialog>

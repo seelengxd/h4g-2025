@@ -97,7 +97,7 @@ const User = () => {
         <h3 className="mb-2 leading-4 tracking-tight text-slate-600">
           Manage resident
         </h3>
-        <div className="grid sm:grid-cols-2 sm:gap-4">
+        <div className="grid gap-4 sm:grid-cols-2">
           <Button variant={"secondary"} onClick={resetPassword}>
             Reset Password
           </Button>

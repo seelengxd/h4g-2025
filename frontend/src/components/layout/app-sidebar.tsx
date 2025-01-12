@@ -1,5 +1,4 @@
 import { ChevronUp, User2 } from "lucide-react";
-import { GoDatabase, GoGraph, GoPeople, GoTable } from "react-icons/go";
 import { Link, useNavigate } from "react-router";
 
 import { logoutAuthLogoutGet } from "@/api";
@@ -22,13 +21,7 @@ import {
 
 import { useUserStore } from "@/store/user/user-store-provider";
 import { Badge } from "../ui/badge";
-
-const SIDEBAR_ITEMS = [
-  { path: "/users", icon: <GoPeople />, label: "Users" },
-  { path: "/products", icon: <GoDatabase />, label: "Shop" },
-  { path: "/reports", icon: <GoGraph />, label: "Reports" },
-  { path: "/audit", icon: <GoTable />, label: "Audit" },
-];
+import { SIDEBAR_ITEMS } from "./sidebar-items";
 
 type OwnProps = {
   pathname: string;

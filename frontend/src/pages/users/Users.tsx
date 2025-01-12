@@ -13,7 +13,7 @@ const Users = () => {
   const [search, setSearch] = useState("");
   return (
     <>
-      <div>
+      <div className="sticky top-0 bg-white">
         <div className="flex justify-between">
           <h1 className="text-2xl font-light">Manage residents</h1>
           <NewUserFormDialog>

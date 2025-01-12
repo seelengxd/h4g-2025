@@ -13,6 +13,7 @@ import Products from "./pages/products/products";
 import Product from "./pages/products/product";
 import Cart from "./pages/orders/cart";
 import Home from "./pages/home/Home";
+import Order from "./pages/orders/order";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
@@ -31,6 +32,9 @@ createRoot(document.getElementById("root")!).render(
               <Route path=":id" element={<Product />} />
             </Route>
             <Route path="cart" element={<Cart />} />
+            <Route path="orders">
+              <Route path=":id" element={<Order />} />
+            </Route>
           </Route>
         </Routes>
       </BrowserRouter>

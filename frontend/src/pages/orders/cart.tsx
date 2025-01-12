@@ -33,7 +33,7 @@ const Cart = () => {
       {
         onSuccess: () => {
           setCart([]);
-          navigate("/home");
+          navigate("/");
           setUser({ ...user!, points: user!.points - total });
         },
       }

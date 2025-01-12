@@ -94,17 +94,34 @@ def update_order(
     user: Annotated[User, Depends(get_current_user)],
 ):
     """The only thing that may be updated is the order state."""
-    order = session.scalar(select(Order).where(Order.id == order_id))
+    order = session.scalar(
+        select(Order)
+        .where(Order.id == order_id)
+        .options(selectinload(Order.order_products, OrderProduct.product))
+    )
     if not order:
         raise HTTPException(status_code=404, detail="Order not found")
 
     # If the user is a resident and order is not his/not withdraw, reject the update.
     if not user.role.is_staff() and (
-        order.user_id != user.id or data.state != OrderState.WITHDRAWN
+        order.user_id != user.id
+        or data.state not in (OrderState.WITHDRAWN, OrderState.CLAIMED)
     ):
         raise HTTPException(status_code=403, detail="Forbidden")
 
     order.state = data.state
+
+    if data.state == OrderState.WITHDRAWN:
+        user.points += sum(
+            product.points * product.qty for product in order.order_products
+        )
+        session.add(user)
+
+    if data.state == OrderState.CLAIMED:
+        for order_product in order.order_products:
+            order_product.product.total_qty -= order_product.qty
+            session.add(order_product.product)
+
     session.commit()
     session.refresh(order)
 

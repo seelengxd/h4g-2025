@@ -3,6 +3,16 @@ from pydantic import BaseModel, ConfigDict, EmailStr, Field, model_validator
 from src.auth.models import Role
 
 
+class MiniUserPublic(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
+    id: int
+    role: Role
+    full_name: str
+    username: str
+    image: str | None
+
+
 class UserPublic(BaseModel):
     model_config = ConfigDict(from_attributes=True)
 

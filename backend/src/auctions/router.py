@@ -4,10 +4,11 @@ from sqlalchemy import select
 from sqlalchemy.orm import Session, selectinload
 
 from src.auctions.models import Auction, Bid
-from src.auctions.schemas import BidCreate
+from src.auctions.schemas import AuctionCreate, BidCreate
 from src.auth.dependencies import get_current_user
 from src.auth.models import User
 from src.common.dependencies import get_session
+from src.products.models import Product
 
 
 router = APIRouter(path="/auctions", tags=["auctions"])
@@ -16,7 +17,7 @@ router = APIRouter(path="/auctions", tags=["auctions"])
 @router.get("/")
 def get_all_auctions(
     session: Annotated[Session, Depends(get_session)],
-):
+) -> list[Auction]:
     auctions = session.scalars(
         select(Auction)
         .order_by(Auction.id.desc())
@@ -29,7 +30,7 @@ def get_all_auctions(
 def get_auction(
     auction_id: int,
     session: Annotated[Session, Depends(get_session)],
-):
+) -> Auction:
     auction = session.scalar(
         select(Auction)
         .where(Auction.id == auction_id)
@@ -39,6 +40,19 @@ def get_auction(
     if not auction:
         raise HTTPException(status_code=404, detail="Auction not found")
 
+    return auction
+
+
+@router.post("/")
+def create_auction(
+    data: AuctionCreate, session: Annotated[Session, Depends(get_session)]
+):
+    product = session.scalar(select(Product).where(Product.id == data.product_id))
+    if not product:
+        raise HTTPException(status_code=404, detail="Product not found")
+
+    auction = Auction(**data.model_dump())
+    session.add(auction)
     return auction
 
 

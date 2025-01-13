@@ -9,7 +9,7 @@ class Auction(Base):
 
     id: Mapped[int] = mapped_column(primary_key=True)
     product_id: Mapped[int] = mapped_column(ForeignKey("products.id"), nullable=False)
-    completed: bool
+    completed: Mapped[bool]
     reserve_price: Mapped[int]
 
     bids: Mapped[list["Bid"]] = relationship(

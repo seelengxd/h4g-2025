@@ -2,7 +2,7 @@ import "@/index.css";
 
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
-import { BrowserRouter, Routes, Route, Navigate } from "react-router";
+import { BrowserRouter, Routes, Route } from "react-router";
 
 import { StoreProvider } from "@/store/store-provider.tsx";
 import Login from "./pages/auth/login";
@@ -14,6 +14,8 @@ import Product from "./pages/products/product";
 import Cart from "./pages/orders/cart";
 import Home from "./pages/home/Home";
 import Order from "./pages/orders/order";
+import Auctions from "./pages/auctions/auctions";
+import Auction from "./pages/auctions/auction";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
@@ -34,6 +36,10 @@ createRoot(document.getElementById("root")!).render(
             <Route path="cart" element={<Cart />} />
             <Route path="orders">
               <Route path=":id" element={<Order />} />
+            </Route>
+            <Route path="auctions">
+              <Route index element={<Auctions />} />
+              <Route path=":id" element={<Auction />} />
             </Route>
           </Route>
         </Routes>

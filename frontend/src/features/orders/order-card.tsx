@@ -1,4 +1,4 @@
-import { OrderPublic } from "@/api";
+import { MiniOrderPublic } from "@/api";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
@@ -7,7 +7,7 @@ import { useCombinedStore } from "@/store/user/user-store-provider";
 import { Link } from "react-router";
 
 type OwnProps = {
-  order: OrderPublic;
+  order: MiniOrderPublic;
 };
 
 const OrderCard: React.FC<OwnProps> = ({ order }) => {

@@ -33,6 +33,7 @@ export type MiniOrderPublic = {
     id: number;
     order_products: Array<OrderProductPublic>;
     state: OrderState;
+    user: UserPublic;
 };
 
 export type MiniProductPublic = {
@@ -63,8 +64,8 @@ export type OrderPublic = {
     id: number;
     order_products: Array<OrderProductPublic>;
     state: OrderState;
-    logs: Array<AuditLogPublic>;
     user: UserPublic;
+    logs: Array<AuditLogPublic>;
 };
 
 /**

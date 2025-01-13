@@ -20,8 +20,10 @@ def get_all_orders(
     session: Annotated[Session, Depends(get_session)],
     user: Annotated[User, Depends(get_current_user)],
 ) -> list[MiniOrderPublic]:
-    query = select(Order).options(
-        selectinload(Order.order_products, OrderProduct.product)
+    query = (
+        select(Order)
+        .order_by(Order.id.desc())
+        .options(selectinload(Order.order_products, OrderProduct.product))
     )
     if not user.role.is_staff():
         query = query.where(Order.user_id == user.id)

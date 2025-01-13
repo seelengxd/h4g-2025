@@ -2,8 +2,8 @@ import { OrderState } from "@/api";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import AuditLogTable from "@/features/audit-logs/audit-log-table";
+import OrderProductItem from "@/features/orders/order-product-item";
 import { getOrder, useUpdateOrder } from "@/features/orders/queries";
-import ProductImage from "@/features/products/product-image";
 import { useCombinedStore } from "@/store/user/user-store-provider";
 import { useQuery } from "@tanstack/react-query";
 import { ChevronLeft } from "lucide-react";
@@ -22,6 +22,9 @@ const Order = () => {
   }
 
   const isStaff = user?.role !== "resident";
+  const hasSufficientStock = order.order_products.every(
+    (orderProduct) => orderProduct.product.total_qty >= orderProduct.qty
+  );
 
   const updateState = (state: OrderState) => {
     updateOrderMutation.mutate({ state });
@@ -36,7 +39,7 @@ const Order = () => {
       </Link>
       <div className="flex justify-between mt-4">
         <h1 className="text-lg font-semibold">
-          Order #{order.id}{" "}
+          Request #{order.id}{" "}
           {isStaff && (
             <span className="font-light">
               from{" "}
@@ -47,33 +50,30 @@ const Order = () => {
           )}
         </h1>
 
-        <Badge>{order.state}</Badge>
+        <Badge variant={"secondary"}>{order.state}</Badge>
       </div>
       <div className="mt-4">
-        <h2 className="text-lg font-light">Order details</h2>
+        <h2 className="text-lg font-light">Request details</h2>
         <div className="flex flex-col gap-4">
           {order &&
             order.order_products.map((orderProduct) => (
-              <div className="flex justify-between">
-                <ProductImage
-                  product={orderProduct.product}
-                  className="w-20 h-20"
-                />
-                <div className="flex flex-col justify-center text-right">
-                  <Link
-                    to={`/products/${orderProduct.product.id}`}
-                    className="hover:opacity-80"
-                  >
-                    <span>{orderProduct.product.name}</span>
-                  </Link>
-                  <span className="font-light">x {orderProduct.qty}</span>
-                </div>
-              </div>
+              <OrderProductItem
+                orderProduct={orderProduct}
+                key={orderProduct.product.id}
+              />
             ))}
         </div>
       </div>
       <div className="mt-4">
-        <h2 className="text-lg font-light">Manage order</h2>
+        <h2 className="text-lg font-light">Manage request</h2>
+        {order.state == "pending" &&
+          user.role !== "resident" &&
+          !hasSufficientStock && (
+            <p className="mb-2 text-sm text-orange-600">
+              *Some items in the list don't have enough stock. Please replenish
+              them before fulfilling the order.
+            </p>
+          )}
         {/* actions */}
         {["rejected", "withdrawn", "claimed"].includes(order.state) && (
           <p className="font-light">No actions at this time.</p>
@@ -85,7 +85,12 @@ const Order = () => {
             </Button>
           ) : (
             <div className="flex gap-4">
-              <Button onClick={() => updateState("approved")}>Approve</Button>
+              <Button
+                onClick={() => updateState("approved")}
+                disabled={!hasSufficientStock}
+              >
+                Approve
+              </Button>
               <Button onClick={() => updateState("rejected")}>Reject</Button>
             </div>
           ))}
@@ -96,7 +101,7 @@ const Order = () => {
         )}
       </div>
       <div className="mt-4">
-        <h2 className="text-lg font-light">Order history</h2>
+        <h2 className="text-lg font-light">Request history</h2>
         {order.logs && <AuditLogTable logs={order.logs} />}
       </div>
     </div>

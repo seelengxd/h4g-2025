@@ -12,11 +12,11 @@ class MiniOrderPublic(BaseModel):
     id: int
     order_products: list["OrderProductPublic"]
     state: OrderState
+    user: UserPublic
 
 
 class OrderPublic(MiniOrderPublic):
     logs: list[AuditLogPublic]
-    user: UserPublic
 
 
 class OrderProductPublic(BaseModel):

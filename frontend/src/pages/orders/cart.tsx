@@ -4,6 +4,7 @@ import { ChevronLeft, Minus, Plus, ShoppingCart } from "lucide-react";
 import { Link, useNavigate } from "react-router";
 import ProductImage from "../../features/products/product-image";
 import { useCreateOrder } from "@/features/orders/queries";
+import { Badge } from "@/components/ui/badge";
 
 const Cart = () => {
   const { items, setCart, user, setUser } = useCombinedStore((store) => store);
@@ -39,6 +40,8 @@ const Cart = () => {
       }
     );
   };
+
+  const hasPreorders = items.some((item) => item.product.total_qty < item.qty);
 
   if (!user) {
     return;
@@ -79,8 +82,15 @@ const Cart = () => {
                 <div className="flex items-center w-full gap-4">
                   <ProductImage product={item.product} />
                   <div className="flex flex-col gap-2">
-                    <div className="text-lg font-semibold">
-                      {item.product.name}
+                    <div className="flex gap-2">
+                      <span className="text-lg font-semibold">
+                        {item.product.name}
+                      </span>
+                      {item.product.total_qty < item.qty && (
+                        <Badge variant={"warning"}>
+                          [Preorder] Insufficient stock
+                        </Badge>
+                      )}
                     </div>
                     <div className="text-sm">{item.product.points} Pts/pc</div>
                   </div>
@@ -111,6 +121,12 @@ const Cart = () => {
             <div className="text-lg font-semibold">{total} Pts</div>
           </div>
           <hr className="my-4" />
+          {hasPreorders && (
+            <p className="text-sm font-light text-orange-600">
+              *Note: Some items in your list need to be restocked. Request may
+              take longer than expected.
+            </p>
+          )}
           {total <= user.points ? (
             <Button className="mt-8" onClick={submitOrder}>
               Make Request

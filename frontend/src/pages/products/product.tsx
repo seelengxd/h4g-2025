@@ -10,6 +10,7 @@ import { GoPencil } from "react-icons/go";
 import { Link, Navigate, useParams } from "react-router";
 import ProductImage from "../../features/products/product-image";
 import AuditLogTable from "@/features/audit-logs/audit-log-table";
+import AddToCartButton from "@/features/orders/add-to-cart-button";
 
 const Product = () => {
   const { id } = useParams<"id">();
@@ -63,14 +64,7 @@ const Product = () => {
               </Button>
             </UpdateProductFormDialog>
           )}
-          {!isStaff && (
-            <OrderSheet product={product}>
-              <Button className="mt-4">
-                <Plus className="w-4 h-4" />
-                Add to cart
-              </Button>
-            </OrderSheet>
-          )}
+          {!isStaff && <AddToCartButton product={product} />}
         </div>
       </div>
       {/* Past transactions */}

@@ -128,7 +128,7 @@ def update_order(
         parent_type="order",
         parent_id=order.id,
         user_id=user.id,
-        action=f"{user.full_name} changed the order state from {order.state.value.title()} to {data.state.value.title()}.",
+        action=f"{user.full_name} changed the request state from {order.state.value.title()} to {data.state.value.title()}.",
     )
     session.add(order_log)
 

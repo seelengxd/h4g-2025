@@ -14,17 +14,20 @@ import {
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
-import { DollarSign, Luggage } from "lucide-react";
+import { AlertCircle, DollarSign, Luggage } from "lucide-react";
 import { useCombinedStore } from "@/store/user/user-store-provider";
 import ProductImage from "@/features/products/product-image";
+import { Alert, AlertDescription } from "@/components/ui/alert";
 
 type OwnProps = {
   product: ProductPublic;
+  isPreorder: boolean;
 };
 
 const OrderSheet: React.FC<PropsWithChildren & OwnProps> = ({
   product,
   children,
+  isPreorder,
 }) => {
   const { items, setCart } = useCombinedStore((store) => store);
   const cartItem = items.find((item) => item.product.id === product.id);
@@ -59,6 +62,20 @@ const OrderSheet: React.FC<PropsWithChildren & OwnProps> = ({
                   <Luggage className="w-4 h-4" />
                   {product.total_qty} left
                 </div>
+                {isPreorder && (
+                  <Alert
+                    className="flex items-center gap-2 p-2 px-4 mt-2"
+                    variant={"destructive"}
+                  >
+                    <div>
+                      <AlertCircle className="w-4 h-4" />
+                    </div>
+                    <AlertDescription>
+                      This item is out of stock. Order fulfilment may take
+                      longer.
+                    </AlertDescription>
+                  </Alert>
+                )}
               </div>
             </div>
           </SheetDescription>
@@ -81,11 +98,13 @@ const OrderSheet: React.FC<PropsWithChildren & OwnProps> = ({
         </div>
         <SheetFooter>
           <SheetClose asChild>
-            {product.total_qty > 0 && (
-              <Button type="submit" onClick={onAdd} disabled={available === 0}>
-                Add to cart
-              </Button>
-            )}
+            <Button
+              type="submit"
+              onClick={onAdd}
+              variant={isPreorder ? "warning" : "default"}
+            >
+              Add to cart {isPreorder && "(Preorder)"}
+            </Button>
           </SheetClose>
         </SheetFooter>
       </SheetContent>

@@ -4,7 +4,7 @@ import { getOrders } from "@/features/orders/queries";
 import ProductImage from "@/features/products/product-image";
 import { useCombinedStore } from "@/store/user/user-store-provider";
 import { useQuery } from "@tanstack/react-query";
-import OrderCard from "../orders/order-card";
+import OrderCard from "../../features/orders/order-card";
 
 const StaffHome = () => {
   const { user } = useCombinedStore((store) => store);
@@ -22,7 +22,7 @@ const StaffHome = () => {
           <p className="text-xl uppercase">{user.full_name}</p>
         </div>
         <div className="mt-4">
-          <h2 className="text-lg font-light">All orders</h2>
+          <h2 className="text-lg font-light">All requests</h2>
           <div className="flex flex-col gap-4">
             {orders &&
               orders.map((order) => <OrderCard key={order.id} order={order} />)}

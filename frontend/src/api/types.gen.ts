@@ -64,6 +64,7 @@ export type OrderPublic = {
     order_products: Array<OrderProductPublic>;
     state: OrderState;
     logs: Array<AuditLogPublic>;
+    user: UserPublic;
 };
 
 /**

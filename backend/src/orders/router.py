@@ -42,6 +42,7 @@ def get_order(
         .options(
             selectinload(Order.order_products, OrderProduct.product),
             selectinload(Order.logs),
+            selectinload(Order.user),
         )
     )
     order = session.scalar(query)

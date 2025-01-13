@@ -30,4 +30,5 @@ class Product(Base):
         primaryjoin=and_(
             id == foreign(AuditLog.parent_id), AuditLog.parent_type == "product"
         ),
+        order_by="AuditLog.created_at.desc()",
     )

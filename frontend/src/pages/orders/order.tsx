@@ -21,6 +21,8 @@ const Order = () => {
     return;
   }
 
+  const isStaff = user?.role !== "resident";
+
   const updateState = (state: OrderState) => {
     updateOrderMutation.mutate({ state });
   };
@@ -33,7 +35,18 @@ const Order = () => {
         </Button>
       </Link>
       <div className="flex justify-between mt-4">
-        <h1 className="text-lg font-semibold">Order #{order.id}</h1>
+        <h1 className="text-lg font-semibold">
+          Order #{order.id}{" "}
+          {isStaff && (
+            <span className="font-light">
+              from{" "}
+              <Link to={`/users/${order.user.id}`} className="hover:opacity-80">
+                {order.user.full_name}
+              </Link>
+            </span>
+          )}
+        </h1>
+
         <Badge>{order.state}</Badge>
       </div>
       <div className="mt-4">

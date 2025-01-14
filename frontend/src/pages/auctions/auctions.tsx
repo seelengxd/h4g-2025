@@ -1,4 +1,6 @@
+import { Button } from "@/components/ui/button";
 import { useCombinedStore } from "@/store/user/user-store-provider";
+import { ListPlus } from "lucide-react";
 
 const Auctions = () => {
   const { user } = useCombinedStore((store) => store);
@@ -15,14 +17,11 @@ const Auctions = () => {
           <h1 className="text-2xl font-light">
             {isStaff ? "Manage auctions" : "Auctions"}
           </h1>
-          {/* {isStaff && (
-            <NewProductFormDialog>
-              <Button>
-                <ListPlus /> Add product
-              </Button>
-            </NewProductFormDialog>
+          {isStaff && (
+            <Button>
+              <ListPlus /> Add auction
+            </Button>
           )}
-          {!isStaff && <CartButton />} */}
         </div>
         <hr className="my-4" />
       </div>

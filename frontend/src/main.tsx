@@ -16,6 +16,7 @@ import Home from "./pages/home/Home";
 import Order from "./pages/orders/order";
 import Auctions from "./pages/auctions/auctions";
 import Auction from "./pages/auctions/auction";
+import AuthenticatedPage from "./components/layout/authenticated-page";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
@@ -23,23 +24,25 @@ createRoot(document.getElementById("root")!).render(
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Layout />}>
-            <Route index element={<Home />} />
             <Route path="login" element={<Login />} />
-            <Route path="users">
-              <Route index element={<Users />} />
-              <Route path=":id" element={<User />} />
-            </Route>
-            <Route path="products">
-              <Route index element={<Products />} />
-              <Route path=":id" element={<Product />} />
-            </Route>
-            <Route path="cart" element={<Cart />} />
-            <Route path="orders">
-              <Route path=":id" element={<Order />} />
-            </Route>
-            <Route path="auctions">
-              <Route index element={<Auctions />} />
-              <Route path=":id" element={<Auction />} />
+            <Route path="" element={<AuthenticatedPage />}>
+              <Route index element={<Home />} />
+              <Route path="users">
+                <Route index element={<Users />} />
+                <Route path=":id" element={<User />} />
+              </Route>
+              <Route path="products">
+                <Route index element={<Products />} />
+                <Route path=":id" element={<Product />} />
+              </Route>
+              <Route path="cart" element={<Cart />} />
+              <Route path="orders">
+                <Route path=":id" element={<Order />} />
+              </Route>
+              <Route path="auctions">
+                <Route index element={<Auctions />} />
+                <Route path=":id" element={<Auction />} />
+              </Route>
             </Route>
           </Route>
         </Routes>

@@ -4,20 +4,20 @@ from sqlalchemy import select
 from sqlalchemy.orm import Session, selectinload
 
 from src.auctions.models import Auction, Bid
-from src.auctions.schemas import AuctionCreate, BidCreate
+from src.auctions.schemas import AuctionCreate, AuctionPublic, BidCreate
 from src.auth.dependencies import get_current_user
 from src.auth.models import User
 from src.common.dependencies import get_session
 from src.products.models import Product
 
 
-router = APIRouter(path="/auctions", tags=["auctions"])
+router = APIRouter(prefix="/auctions", tags=["auctions"])
 
 
 @router.get("/")
 def get_all_auctions(
     session: Annotated[Session, Depends(get_session)],
-) -> list[Auction]:
+) -> list[AuctionPublic]:
     auctions = session.scalars(
         select(Auction)
         .order_by(Auction.id.desc())
@@ -30,7 +30,7 @@ def get_all_auctions(
 def get_auction(
     auction_id: int,
     session: Annotated[Session, Depends(get_session)],
-) -> Auction:
+) -> AuctionPublic:
     auction = session.scalar(
         select(Auction)
         .where(Auction.id == auction_id)

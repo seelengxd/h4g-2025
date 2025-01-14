@@ -12,6 +12,7 @@ async def create_file(file: UploadFile):
 
     if not os.path.exists("uploads"):
         os.makedirs("uploads")
+
     with open(os.path.join("uploads", filename), "wb") as f:
         f.write(await file.read())
 

@@ -75,6 +75,15 @@ def complete_auction(
         raise HTTPException(status_code=400, detail="Auction is already completed")
 
     auction.completed = True
+
+    # deduct winners points
+    bids = auction.bids
+    if bids:
+        winner = max(bids, key=lambda bid: bid.points)
+        winner.user.points -= winner.points
+
+    session.add(auction)
+    session.add(winner.user)
     session.commit()
 
     return auction

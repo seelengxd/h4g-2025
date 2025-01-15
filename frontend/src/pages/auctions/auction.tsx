@@ -37,7 +37,7 @@ const Auction = () => {
         )
       );
     }
-  }, [auction]);
+  }, [auction, bidPoints]);
 
   const [error, setError] = useState("");
 
@@ -51,7 +51,7 @@ const Auction = () => {
 
   const isStaff = user.role !== "resident";
 
-  const bids = auction.bids.sort((a, b) => b.points - a.points);
+  const bids = auction.bids;
   const currentBid = bids[0];
   const yourBid = bids.find((bid) => bid.user.id === user.id);
 
@@ -104,10 +104,7 @@ const Auction = () => {
               <Input
                 key={Math.max(auction.reserve_price, currentBid?.points ?? 0)}
                 type="number"
-                value={bidPoints}
-                defaultValue={
-                  (currentBid?.points ?? auction.reserve_price - 1) + 1
-                }
+                defaultValue={bidPoints}
                 onChange={(e) => setBidPoints(Number(e.target.value))}
               ></Input>
               <Button

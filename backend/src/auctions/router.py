@@ -51,8 +51,41 @@ def create_auction(
     if not product:
         raise HTTPException(status_code=404, detail="Product not found")
 
-    auction = Auction(**data.model_dump())
+    auction = Auction(**data.model_dump(), completed=False)
     session.add(auction)
+    session.commit()
+    session.refresh(auction)
+    return auction
+
+
+@router.put("/{auction_id}")
+def complete_auction(
+    auction_id: int, session: Annotated[Session, Depends(get_session)]
+):
+    auction = session.scalar(
+        select(Auction)
+        .where(Auction.id == auction_id)
+        .options(selectinload(Auction.bids, Bid.user))
+    )
+
+    if not auction:
+        raise HTTPException(status_code=404, detail="Auction not found")
+
+    if auction.completed:
+        raise HTTPException(status_code=400, detail="Auction is already completed")
+
+    auction.completed = True
+
+    # deduct winners points
+    bids = auction.bids
+    if bids:
+        winner = max(bids, key=lambda bid: bid.points)
+        winner.user.points -= winner.points
+
+    session.add(auction)
+    session.add(winner.user)
+    session.commit()
+
     return auction
 
 
@@ -74,6 +107,9 @@ def make_bid(
 
     if auction.completed:
         raise HTTPException(status_code=400, detail="Auction is completed")
+
+    if user.points < data.bid:
+        raise HTTPException(status_code=400, detail="Insufficient points")
 
     if data.bid < auction.reserve_price:
         raise HTTPException(status_code=400, detail="Bid is lower than reserve price")

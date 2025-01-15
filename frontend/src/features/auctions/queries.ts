@@ -1,6 +1,8 @@
 import {
+  completeAuctionAuctionsAuctionIdPut,
   createAuctionAuctionsPost,
   getAllAuctionsAuctionsGet,
+  getAuctionAuctionsAuctionIdGet,
   makeBidAuctionsAuctionIdBidsPost,
 } from "@/api";
 import {
@@ -27,9 +29,10 @@ export const getAuction = (id: number) => {
   return queryOptions({
     queryKey: [AuctionQueryKeys.Auctions, id],
     queryFn: () =>
-      getAllAuctionsAuctionsGet({ withCredentials: true }).then(
+      getAuctionAuctionsAuctionIdGet({ path: { auction_id: id } }).then(
         (response) => response.data
       ),
+    refetchInterval: 2000,
   });
 };
 
@@ -43,6 +46,22 @@ export const useCreateAuction = () => {
     }) => createAuctionAuctionsPost({ body: data }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: [AuctionQueryKeys.Auctions] });
+    },
+  });
+};
+
+export const useCloseAuction = (id: number) => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: () => {
+      return completeAuctionAuctionsAuctionIdPut({
+        path: { auction_id: id },
+      });
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: [AuctionQueryKeys.Auctions, id],
+      });
     },
   });
 };

@@ -99,6 +99,9 @@ def make_bid(
     if auction.completed:
         raise HTTPException(status_code=400, detail="Auction is completed")
 
+    if user.points < data.bid:
+        raise HTTPException(status_code=400, detail="Insufficient points")
+
     if data.bid < auction.reserve_price:
         raise HTTPException(status_code=400, detail="Bid is lower than reserve price")
 

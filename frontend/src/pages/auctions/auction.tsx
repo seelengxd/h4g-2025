@@ -112,8 +112,9 @@ const Auction = () => {
               ></Input>
               <Button
                 onClick={() => createBidMutation.mutate({ bid: bidPoints })}
+                disabled={user.points < bidPoints}
               >
-                Make bid
+                Make bid {user.points < bidPoints && "(Not enough points)"}
               </Button>
             </div>
           )}

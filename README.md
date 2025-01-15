@@ -11,11 +11,13 @@
 3. Create the database: `CREATE DATABASE minimart;` and exit (ctrl+d)
 
 4. Install [astral-uv](https://github.com/astral-sh/uv)
-5. `uv sync`
+5. `cd backend`
+6. `uv sync`
 
-6. `cp backend/.env.example backend/.env`
-7. `uv run alembic upgrade head`
-8. `uv run fastapi dev src/app.py`
+7. `cp backend/.env.example backend/.env`
+8. `uv run alembic upgrade head`
+9. `uv run seed.py`
+10. `uv run fastapi dev src/app.py`
 
 #### Modifying the database schema
 
@@ -26,7 +28,8 @@
 ### Frontend
 
 ```bash
-cp frontend/.env.example frontend/.env`
+cd frontend
+cp frontend/.env.example frontend/.env
 pnpm install
 pnpm run dev
 ```

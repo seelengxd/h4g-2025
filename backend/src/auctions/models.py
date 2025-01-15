@@ -3,6 +3,8 @@ from src.auth.models import User
 from src.common.base import Base
 from sqlalchemy.orm import mapped_column, Mapped, relationship
 
+from src.products.models import Product
+
 
 class Auction(Base):
     __tablename__ = "auctions"
@@ -15,6 +17,8 @@ class Auction(Base):
     bids: Mapped[list["Bid"]] = relationship(
         "Bid", order_by="Bid.points.desc()", back_populates="auction"
     )
+
+    product: Mapped["Product"] = relationship("Product", backref="auctions")
 
 
 class Bid(Base):

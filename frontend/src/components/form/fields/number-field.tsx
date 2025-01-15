@@ -49,6 +49,9 @@ function NumberField({
                 type="number"
                 placeholder={placeholder}
                 {...field}
+                onChange={(e) => {
+                  field.onChange(e);
+                }}
                 className={cn("col-span-3", className)}
               />
             </div>

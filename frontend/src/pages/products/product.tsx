@@ -43,7 +43,6 @@ const Product = () => {
       </div>
       <div className="flex gap-4 mt-4">
         <ProductImage product={product} className="w-40 h-40" />
-
         <div className="pl-4 border-l">
           <div className="flex items-baseline gap-4">
             <h1 className="text-2xl font-light">{product.name}</h1>

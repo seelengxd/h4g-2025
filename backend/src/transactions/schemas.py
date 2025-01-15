@@ -1,4 +1,3 @@
-from datetime import datetime
 from pydantic import BaseModel, ConfigDict
 
 from src.auth.schemas import UserPublic
@@ -14,4 +13,4 @@ class TransactionPublic(BaseModel):
     user_id: int
     points: int
     state: TransactionState
-    user: UserPublic
+

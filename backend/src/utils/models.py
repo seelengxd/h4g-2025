@@ -8,3 +8,4 @@ from src.auctions import models  # noqa: F401
 
 from src.voucherTask import models
 from src.transactions import models
+from src.reports import models

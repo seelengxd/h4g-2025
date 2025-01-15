@@ -1,3 +1,4 @@
+from datetime import datetime
 from pydantic import BaseModel
 
 from src.auth.schemas import MiniUserPublic
@@ -9,6 +10,8 @@ class AuctionPublic(BaseModel):
     product: MiniProductPublic
     bids: list["BidPublic"]
     reserve_price: int
+    completed: bool
+    created_at: datetime
 
 
 class BidPublic(BaseModel):

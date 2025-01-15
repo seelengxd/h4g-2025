@@ -1,8 +1,8 @@
-import { ProductPublic } from "@/api";
+import { MiniProductPublic } from "@/api";
 import { GoQuestion } from "react-icons/go";
 
 type OwnProps = {
-  product: ProductPublic;
+  product: MiniProductPublic;
   className?: string;
 };
 

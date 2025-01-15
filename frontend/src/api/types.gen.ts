@@ -10,6 +10,8 @@ export type AuctionPublic = {
     product: MiniProductPublic;
     bids: Array<BidPublic>;
     reserve_price: number;
+    completed: boolean;
+    created_at: string;
 };
 
 export type AuditLogPublic = {
@@ -325,6 +327,16 @@ export type GetAuctionAuctionsAuctionIdGetData = {
 export type GetAuctionAuctionsAuctionIdGetResponse = (AuctionPublic);
 
 export type GetAuctionAuctionsAuctionIdGetError = (HTTPValidationError);
+
+export type CompleteAuctionAuctionsAuctionIdPutData = {
+    path: {
+        auction_id: number;
+    };
+};
+
+export type CompleteAuctionAuctionsAuctionIdPutResponse = (unknown);
+
+export type CompleteAuctionAuctionsAuctionIdPutError = (HTTPValidationError);
 
 export type MakeBidAuctionsAuctionIdBidsPostData = {
     body: BidCreate;

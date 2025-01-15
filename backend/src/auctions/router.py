@@ -51,8 +51,32 @@ def create_auction(
     if not product:
         raise HTTPException(status_code=404, detail="Product not found")
 
-    auction = Auction(**data.model_dump())
+    auction = Auction(**data.model_dump(), completed=False)
     session.add(auction)
+    session.commit()
+    session.refresh(auction)
+    return auction
+
+
+@router.put("/{auction_id}")
+def complete_auction(
+    auction_id: int, session: Annotated[Session, Depends(get_session)]
+):
+    auction = session.scalar(
+        select(Auction)
+        .where(Auction.id == auction_id)
+        .options(selectinload(Auction.bids, Bid.user))
+    )
+
+    if not auction:
+        raise HTTPException(status_code=404, detail="Auction not found")
+
+    if auction.completed:
+        raise HTTPException(status_code=400, detail="Auction is already completed")
+
+    auction.completed = True
+    session.commit()
+
     return auction
 
 

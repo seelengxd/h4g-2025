@@ -8,7 +8,12 @@ from src.auth.dependencies import get_current_user
 from src.auth.models import User
 from src.common.dependencies import get_session
 from src.voucherTask.models import VoucherTask, TaskUser
-from src.voucherTask.schemas import  MiniVoucherTaskPublic, VoucherTaskCreate, VoucherTaskUpdate, MiniTaskUserPublic
+from src.voucherTask.schemas import (
+    MiniVoucherTaskPublic,
+    VoucherTaskCreate,
+    VoucherTaskUpdate,
+    MiniTaskUserPublic,
+)
 
 
 router = APIRouter(prefix="/voucherTasks", tags=["voucherTasks"])
@@ -18,7 +23,9 @@ router = APIRouter(prefix="/voucherTasks", tags=["voucherTasks"])
 def get_all_voucherTasks(
     session: Annotated[Session, Depends(get_session)],
 ) -> list[MiniVoucherTaskPublic]:
-    voucherTasks = session.scalars(select(VoucherTask).order_by(VoucherTask.id.desc())).all()
+    voucherTasks = session.scalars(
+        select(VoucherTask).order_by(VoucherTask.id.desc())
+    ).all()
     return voucherTasks
 
 
@@ -27,14 +34,8 @@ def get_voucherTask(
     voucherTask_id: int,
     session: Annotated[Session, Depends(get_session)],
 ) -> MiniVoucherTaskPublic:
-    query = (
-        select(VoucherTask)
-        .where(VoucherTask.id == voucherTask_id)
-        .options(
-            selectinload(VoucherTask.points, VoucherTask.task_name)
-        )
-    )
-    
+    query = select(VoucherTask).where(VoucherTask.id == voucherTask_id)
+
     voucherTask = session.scalar(query)
     if not voucherTask:
         raise HTTPException(status_code=404, detail="Voucher Task not found")
@@ -51,8 +52,8 @@ def create_voucherTask(
     # If the user is admin, allow this action, else forbidden.
     if not user.role.is_staff():
         raise HTTPException(status_code=403, detail="Forbidden")
-    
-    voucherTask = VoucherTask(task_name=data.task_name, points=data.points) 
+
+    voucherTask = VoucherTask(task_name=data.task_name, points=data.points)
 
     session.add(voucherTask)
     session.add(user)
@@ -80,9 +81,7 @@ def update_voucherTask(
 ):
     """Points or task name may be updated"""
     voucherTask = session.scalar(
-        select(VoucherTask)
-        .where(VoucherTask.id == voucherTask_id)
-        .options(selectinload(VoucherTask.points, VoucherTask.task_name))
+        select(VoucherTask).where(VoucherTask.id == voucherTask_id)
     )
     if not voucherTask:
         raise HTTPException(status_code=404, detail="Voucher Task not found")
@@ -109,61 +108,60 @@ def update_voucherTask(
     return voucherTask
 
 
-
 ## ------------ task user table ------------ ##
 @router.get("/")
 def get_all_tasksUsers(
     session: Annotated[Session, Depends(get_session)],
     user: Annotated[User, Depends(get_current_user)],
 ) -> list[MiniTaskUserPublic]:
-    
     if not user.role.is_staff():
         raise HTTPException(status_code=403, detail="Forbidden")
-    
+
     tasksUsers = session.scalars(select(TaskUser).order_by(TaskUser.id.desc())).all()
     return tasksUsers
 
-@router.get("/{voucherTask_id}")
-def get_taskUsers(
-    voucherTask_id: int,
-    session: Annotated[Session, Depends(get_session)],
-    user: Annotated[User, Depends(get_current_user)],
-) -> MiniTaskUserPublic:
-    
-    if not user.role.is_staff():
-        raise HTTPException(status_code=403, detail="Forbidden")
-    
-    query = (
-        select(TaskUser)
-        .where(TaskUser.task_id == voucherTask_id)
-        .options(
-            selectinload(TaskUser.task_id, TaskUser.user_id)
-        )
-    )
-    
-    taskUsers = session.scalar(query)
-    if not taskUsers:
-        raise HTTPException(status_code=404, detail="Task does not exist or has no users.")
 
-    return taskUsers
+# @router.get("/{voucherTask_id}")
+# def get_taskUsers(
+#     voucherTask_id: int,
+#     session: Annotated[Session, Depends(get_session)],
+#     user: Annotated[User, Depends(get_current_user)],
+# ) -> MiniTaskUserPublic:
+
+#     if not user.role.is_staff():
+#         raise HTTPException(status_code=403, detail="Forbidden")
+
+#     query = (
+#         select(TaskUser)
+#         .where(TaskUser.task_id == voucherTask_id)
+#         .options(
+#             selectinload(TaskUser.task_id, TaskUser.user_id)
+#         )
+#     )
+
+#     taskUsers = session.scalar(query)
+#     if not taskUsers:
+#         raise HTTPException(status_code=404, detail="Task does not exist or has no users.")
+
+#     return taskUsers
 
 
-@router.get("/{user_id}")
-def get_UserTasks(
-    user_id: int,
-    session: Annotated[Session, Depends(get_session)],
-) -> MiniTaskUserPublic:
-    
-    query = (
-        select(TaskUser)
-        .where(TaskUser.user_id == user_id)
-        .options(
-            selectinload(TaskUser.task_id, TaskUser.user_id)
-        )
-    )
-    
-    userTasks = session.scalar(query)
-    if not userTasks:
-        raise HTTPException(status_code=404, detail="User does not exist or has no tasks.")
+# @router.get("/{user_id}")
+# def get_UserTasks(
+#     user_id: int,
+#     session: Annotated[Session, Depends(get_session)],
+# ) -> MiniTaskUserPublic:
 
-    return userTasks
+#     query = (
+#         select(TaskUser)
+#         .where(TaskUser.user_id == user_id)
+#         .options(
+#             selectinload(TaskUser.task_id, TaskUser.user_id)
+#         )
+#     )
+
+#     userTasks = session.scalar(query)
+#     if not userTasks:
+#         raise HTTPException(status_code=404, detail="User does not exist or has no tasks.")
+
+#     return userTasks

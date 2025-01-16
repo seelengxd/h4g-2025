@@ -10,14 +10,14 @@ import Layout from "./components/layout/layout";
 import Auction from "./pages/auctions/auction";
 import Auctions from "./pages/auctions/auctions";
 import Login from "./pages/auth/login";
-import Home from "./pages/home/Home";
+import Home from "./pages/home/home";
 import Cart from "./pages/orders/cart";
 import Order from "./pages/orders/order";
 import Product from "./pages/products/product";
 import Products from "./pages/products/products";
 import Reports from "./pages/reports/reports";
-import User from "./pages/users/user";
-import Users from "./pages/users/users";
+import User from "./pages/users/User";
+import Users from "./pages/users/Users";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>

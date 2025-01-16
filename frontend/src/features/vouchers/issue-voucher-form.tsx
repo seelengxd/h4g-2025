@@ -56,23 +56,17 @@ const IssueVoucherTaskFormDialog: React.FC<
         queryKey: [VoucherQueryKeys.VoucherTask, voucherTask.id],
       });
       setIsOpen(false);
+      form.reset();
     },
     onError: (error) => setError(error.message),
   });
 
   const onSubmit: SubmitHandler<IssueVoucherTaskForm> = async (data) => {
-    console.log("data", data);
     await issueVoucherTaskMutation.mutate(data);
   };
 
   return (
-    <Dialog
-      onOpenChange={(open) => {
-        setIsOpen(open);
-        !open && form.reset();
-      }}
-      open={isOpen}
-    >
+    <Dialog onOpenChange={setIsOpen} open={isOpen}>
       <DialogTrigger asChild onClick={() => setIsOpen(true)}>
         {children}
       </DialogTrigger>

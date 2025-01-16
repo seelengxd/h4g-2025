@@ -48,6 +48,7 @@ const NewVoucherTaskFormDialog: React.FC<PropsWithChildren> = ({
         queryKey: [VoucherQueryKeys.VoucherTask],
       });
       setIsOpen(false);
+      form.reset();
     },
     onError: (error) => setError(error.message),
   });
@@ -57,13 +58,7 @@ const NewVoucherTaskFormDialog: React.FC<PropsWithChildren> = ({
   };
 
   return (
-    <Dialog
-      onOpenChange={(open) => {
-        setIsOpen(open);
-        !open && form.reset();
-      }}
-      open={isOpen}
-    >
+    <Dialog onOpenChange={setIsOpen} open={isOpen}>
       <DialogTrigger asChild onClick={() => setIsOpen(true)}>
         {children}
       </DialogTrigger>

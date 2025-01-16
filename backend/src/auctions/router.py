@@ -9,6 +9,7 @@ from src.auth.dependencies import get_current_user
 from src.auth.models import User
 from src.common.dependencies import get_session
 from src.products.models import Product
+from src.transactions.models import Transaction
 
 
 router = APIRouter(prefix="/auctions", tags=["auctions"])
@@ -81,6 +82,13 @@ def complete_auction(
     if bids:
         winner = max(bids, key=lambda bid: bid.points)
         winner.user.points -= winner.points
+        transaction = Transaction(
+            user_id=winner.user_id,
+            amount=-winner.points,
+            parent_id=auction.id,
+            parent_type="bid",
+        )
+        session.add(transaction)
 
     session.add(auction)
     session.add(winner.user)

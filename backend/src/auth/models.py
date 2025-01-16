@@ -1,6 +1,10 @@
+from typing import TYPE_CHECKING
 from src.common.base import Base
-from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 from enum import Enum
+
+if TYPE_CHECKING:
+    from src.transactions.models import Transaction
 
 
 class Role(str, Enum):
@@ -26,3 +30,7 @@ class User(Base):
 
     points: Mapped[int] = mapped_column(server_default="0", nullable=False)
     suspended: Mapped[bool] = mapped_column(server_default="false", nullable=False)
+
+    transactions: Mapped[list["Transaction"]] = relationship(
+        "Transaction", back_populates="user"
+    )

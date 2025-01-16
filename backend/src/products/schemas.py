@@ -1,10 +1,12 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict
 
 from src.audit_logs.schemas import AuditLogPublic
 from src.products.models import Category
 
 
 class MiniProductPublic(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
     id: int
     category: Category
     name: str

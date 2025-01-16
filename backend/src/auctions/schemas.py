@@ -1,7 +1,7 @@
 from datetime import datetime
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict
 
-from src.auth.schemas import MiniUserPublic
+from src.auth.schemas_base import MiniUserPublic
 from src.products.schemas import MiniProductPublic
 
 
@@ -15,6 +15,7 @@ class AuctionPublic(BaseModel):
 
 
 class BidPublic(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
     id: int
     points: int
     user: MiniUserPublic

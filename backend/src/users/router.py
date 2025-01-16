@@ -6,7 +6,8 @@ from sqlalchemy import select
 from src.auth.dependencies import get_password_hash
 from src.common.dependencies import get_session
 from src.auth.models import Role, User
-from src.auth.schemas import UserCreate, UserPublic, UserUpdate
+from src.auth.schemas_base import UserCreate, UserUpdate
+from src.auth.schemas import UserPublic
 from sqlalchemy.orm import Session
 from string import ascii_letters, digits
 

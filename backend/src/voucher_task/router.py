@@ -6,6 +6,7 @@ from sqlalchemy.orm import Session, selectinload
 from src.auth.dependencies import get_current_user
 from src.auth.models import User
 from src.common.dependencies import get_session
+from src.transactions.models import Transaction
 from src.voucher_task.dependencies import retrieve_task
 from src.voucher_task.models import RequestState, TaskUser, VoucherTask
 from src.voucher_task.schema import (
@@ -151,6 +152,13 @@ def approve_requests(
         if task_user.id in data.task_user_ids:
             task_user.state = RequestState.APPROVED
             task_user.user.points += task.points
+            transaction = Transaction(
+                user_id=task_user.user_id,
+                amount=task.points,
+                parent_id=task_user.id,
+                parent_type="task_user",
+            )
+            session.add(transaction)
             session.add(task_user)
     session.commit()
     return task
@@ -179,6 +187,13 @@ def unapprove_requests(
         if task_user.id in data.task_user_ids:
             task_user.state = RequestState.PENDING
             task_user.user.points -= task.points
+            transaction = Transaction(
+                user_id=task_user.user_id,
+                amount=-task.points,
+                parent_id=task_user.id,
+                parent_type="task_user",
+            )
+            session.add(transaction)
             session.add(task_user)
     session.commit()
 

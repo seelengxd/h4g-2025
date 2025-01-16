@@ -6,6 +6,4 @@ from src.orders import models  # noqa: F401
 from src.audit_logs import models  # noqa: F401
 from src.auctions import models  # noqa: F401
 
-from src.voucherTask import models
-from src.transactions import models
-from src.reports import models
+from src.voucher_task import models

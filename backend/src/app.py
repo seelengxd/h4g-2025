@@ -14,9 +14,7 @@ from src.files import router as files
 from src.products import router as products
 from src.orders import router as orders
 from src.auctions import router as auctions
-from src.transactions import router as transactions
-from src.voucherTask import router as voucherTask
-from src.reports import router as reports
+from src.voucher_task import router as voucher_task
 
 
 logging.getLogger("passlib").setLevel(logging.ERROR)
@@ -44,8 +42,6 @@ authenticated_router.include_router(files.router)
 authenticated_router.include_router(products.router)
 authenticated_router.include_router(orders.router)
 authenticated_router.include_router(auctions.router)
-authenticated_router.include_router(transactions.router)
-authenticated_router.include_router(voucherTask.router)
-authenticated_router.include_router(reports.router)
+authenticated_router.include_router(voucher_task.router)
 
 server.include_router(authenticated_router)

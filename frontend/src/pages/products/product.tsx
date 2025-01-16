@@ -1,11 +1,10 @@
 import { Button } from "@/components/ui/button";
 import CartButton from "@/features/orders/cart-button";
-import OrderSheet from "@/features/orders/order-sheet";
 import { getProduct } from "@/features/products/queries";
 import UpdateProductFormDialog from "@/features/products/update-product-form";
 import { useCombinedStore } from "@/store/user/user-store-provider";
 import { useQuery } from "@tanstack/react-query";
-import { ChevronLeft, DollarSign, Luggage, Plus } from "lucide-react";
+import { ChevronLeft, DollarSign, Luggage } from "lucide-react";
 import { GoPencil } from "react-icons/go";
 import { Link, Navigate, useParams } from "react-router";
 import ProductImage from "../../features/products/product-image";

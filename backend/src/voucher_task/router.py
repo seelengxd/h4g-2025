@@ -139,6 +139,20 @@ def add_request(
     ]
     task.task_users.extend(task_users)
     session.add(task)
+    session.flush()
+
+    if data.state == RequestState.APPROVED:
+        for task_user in task_users:
+            task_user.user.points += task.points
+            transaction = Transaction(
+                user_id=task_user.user_id,
+                amount=task.points,
+                parent_id=task_user.id,
+                parent_type="task_user",
+            )
+            session.add(transaction)
+            session.add(task_user)
+
     session.commit()
     return task
 

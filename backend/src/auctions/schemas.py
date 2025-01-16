@@ -19,6 +19,7 @@ class BidPublic(BaseModel):
     id: int
     points: int
     user: MiniUserPublic
+    auction_id: int
 
 
 class AuctionCreate(BaseModel):

@@ -19,6 +19,7 @@ class VoucherTaskPublic(BaseModel):
 class TaskUserPublic(BaseModel):
     model_config = ConfigDict(from_attributes=True)
     id: int
+    task_id: int
     user: MiniUserPublic
     state: RequestState
     created_at: datetime

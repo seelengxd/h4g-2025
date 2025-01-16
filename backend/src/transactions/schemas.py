@@ -1,3 +1,4 @@
+from datetime import datetime
 from pydantic import BaseModel, ConfigDict
 
 from src.auctions.schemas import BidPublic
@@ -11,6 +12,8 @@ class BaseTransactionPublic(BaseModel):
     amount: int
     parent_id: int
     parent_type: str
+
+    created_at: datetime
 
 
 class BidTransactionPublic(BaseTransactionPublic):

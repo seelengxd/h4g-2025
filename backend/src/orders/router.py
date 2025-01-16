@@ -85,6 +85,8 @@ def create_order(
     order.order_products = order_products
 
     total_cost = sum(product.points * product.qty for product in order_products)
+
+    user = session.get(User, user.id)
     user.points -= total_cost
 
     session.add(order)
@@ -142,7 +144,8 @@ def update_order(
 
     order.state = data.state
 
-    if data.state == OrderState.WITHDRAWN:
+    user = session.get(User, order.user_id)
+    if data.state == OrderState.WITHDRAWN or data.state == OrderState.REJECTED:
         total_points = sum(
             product.points * product.qty for product in order.order_products
         )

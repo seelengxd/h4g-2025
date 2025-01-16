@@ -1,6 +1,7 @@
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
+import TransactionList from "@/features/transactions/transaction-list";
 import { getUser, useUpdateUser } from "@/features/users/queries";
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
@@ -108,9 +109,9 @@ const User = () => {
       {/* User History */}
       <div className="mt-4">
         <h3 className="mb-2 leading-4 tracking-tight text-slate-600">
-          History
+          Transaction history
         </h3>
-        <div>Coming soon...</div>
+        <TransactionList transactions={user.transactions} />
       </div>
     </div>
   );

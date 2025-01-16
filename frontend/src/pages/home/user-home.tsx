@@ -3,6 +3,7 @@ import { getOrders } from "@/features/orders/queries";
 import { useCombinedStore } from "@/store/user/user-store-provider";
 import { useQuery } from "@tanstack/react-query";
 import OrderCard from "../../features/orders/order-card";
+import TransactionList from "@/features/transactions/transaction-list";
 
 const UserHome = () => {
   const { user } = useCombinedStore((store) => store);
@@ -34,7 +35,7 @@ const UserHome = () => {
         </div>
         <div className="mt-4">
           <h2 className="text-lg font-light">Transaction history</h2>
-          <div>Coming soon...</div>
+          <TransactionList transactions={user.transactions} />
         </div>
       </div>
     </>

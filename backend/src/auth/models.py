@@ -32,5 +32,5 @@ class User(Base):
     suspended: Mapped[bool] = mapped_column(server_default="false", nullable=False)
 
     transactions: Mapped[list["Transaction"]] = relationship(
-        "Transaction", back_populates="user"
+        "Transaction", back_populates="user", order_by="Transaction.id.desc()"
     )

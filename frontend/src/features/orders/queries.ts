@@ -45,6 +45,7 @@ export const useCreateOrder = () => {
       }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: [OrderQueryKeys.Orders] });
+      queryClient.invalidateQueries({ queryKey: [AuthQueryKeys.UserProfile] });
     },
   });
 };

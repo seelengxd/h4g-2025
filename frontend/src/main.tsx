@@ -18,6 +18,7 @@ import AuthenticatedPage from "./components/layout/authenticated-page";
 import Vouchers from "./pages/vouchers/vouchers";
 import User from "./pages/users/user";
 import Users from "./pages/users/users";
+import Voucher from "./pages/vouchers/voucher";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
@@ -38,6 +39,7 @@ createRoot(document.getElementById("root")!).render(
               </Route>
               <Route path="vouchers">
                 <Route index element={<Vouchers />} />
+                <Route path=":id" element={<Voucher />} />
               </Route>
               <Route path="cart" element={<Cart />} />
               <Route path="orders">

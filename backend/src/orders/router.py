@@ -10,6 +10,7 @@ from src.common.dependencies import get_session
 from src.orders.models import Order, OrderProduct, OrderState
 from src.orders.schemas import OrderCreate, MiniOrderPublic, OrderPublic, OrderUpdate
 from src.products.models import Product
+from src.transactions.models import Transaction
 
 
 router = APIRouter(prefix="/orders", tags=["orders"])
@@ -82,12 +83,21 @@ def create_order(
         for order_product in data.order_products
     ]
     order.order_products = order_products
-    user.points -= sum(product.points * product.qty for product in order_products)
+
+    total_cost = sum(product.points * product.qty for product in order_products)
+
+    user = session.get(User, user.id)
+    user.points -= total_cost
 
     session.add(order)
     session.add(user)
     session.commit()
     session.refresh(order)
+
+    transaction = Transaction(
+        amount=-total_cost, parent_id=order.id, parent_type="order", user_id=user.id
+    )
+    session.add(transaction)
 
     order_log = AuditLog(
         parent_type="order",
@@ -134,10 +144,19 @@ def update_order(
 
     order.state = data.state
 
-    if data.state == OrderState.WITHDRAWN:
-        user.points += sum(
+    user = session.get(User, order.user_id)
+    if data.state == OrderState.WITHDRAWN or data.state == OrderState.REJECTED:
+        total_points = sum(
             product.points * product.qty for product in order.order_products
         )
+        user.points += total_points
+        transaction = Transaction(
+            amount=total_points,
+            parent_id=order.id,
+            parent_type="order",
+            user_id=user.id,
+        )
+        session.add(transaction)
         session.add(user)
 
     if data.state == OrderState.CLAIMED:

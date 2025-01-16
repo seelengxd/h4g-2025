@@ -1,7 +1,7 @@
 from pydantic import BaseModel, ConfigDict, Field
 
 from src.audit_logs.schemas import AuditLogPublic
-from src.auth.schemas import UserPublic
+from src.auth.schemas_base import MiniUserPublic
 from src.orders.models import OrderState
 from src.products.schemas import MiniProductPublic
 
@@ -12,7 +12,7 @@ class MiniOrderPublic(BaseModel):
     id: int
     order_products: list["OrderProductPublic"]
     state: OrderState
-    user: UserPublic
+    user: MiniUserPublic
 
 
 class OrderPublic(MiniOrderPublic):

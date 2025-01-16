@@ -1,11 +1,13 @@
 from datetime import datetime
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict
 
-from src.auth.schemas import MiniUserPublic
+from src.auth.schemas_base import MiniUserPublic
 from src.voucher_task.models import RequestState
 
 
 class VoucherTaskPublic(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
     id: int
     task_name: str
     points: int
@@ -15,7 +17,9 @@ class VoucherTaskPublic(BaseModel):
 
 
 class TaskUserPublic(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
     id: int
+    task_id: int
     user: MiniUserPublic
     state: RequestState
     created_at: datetime

@@ -57,7 +57,13 @@ const NewVoucherTaskFormDialog: React.FC<PropsWithChildren> = ({
   };
 
   return (
-    <Dialog onOpenChange={(open) => !open && form.reset()} open={isOpen}>
+    <Dialog
+      onOpenChange={(open) => {
+        setIsOpen(open);
+        !open && form.reset();
+      }}
+      open={isOpen}
+    >
       <DialogTrigger asChild onClick={() => setIsOpen(true)}>
         {children}
       </DialogTrigger>

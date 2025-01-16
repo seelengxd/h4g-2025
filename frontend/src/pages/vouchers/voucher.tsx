@@ -8,11 +8,21 @@ import {
 } from "@/components/ui/breadcrumb";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import IssueVoucherTaskFormDialog from "@/features/vouchers/issue-voucher-form";
 import { getVoucherTask } from "@/features/vouchers/queries";
 import UpdateVoucherTaskFormDialog from "@/features/vouchers/update-voucher-form";
 import { useCombinedStore } from "@/store/user/user-store-provider";
 import { useQuery } from "@tanstack/react-query";
-import { Coins, Pencil } from "lucide-react";
+import { format } from "date-fns";
+import { Coins, Pencil, UserRoundPlus } from "lucide-react";
 import { useParams } from "react-router";
 
 const Voucher = () => {
@@ -24,6 +34,13 @@ const Voucher = () => {
   if (!user || isLoading) {
     return null;
   }
+
+  const pendingRequests = voucher?.task_users.filter(
+    (taskUser) => taskUser.state === "pending"
+  );
+  const requestHistory = voucher?.task_users.filter(
+    (taskUser) => taskUser.state !== "pending"
+  );
 
   return (
     <>
@@ -56,7 +73,93 @@ const Voucher = () => {
         </div>
         <Separator className="my-6" />
       </div>
-      <div className="flex flex-col gap-6"></div>
+      <div className="flex flex-col mb-24">
+        <div className="flex items-center justify-between mb-4">
+          <span className="font-medium text-xl">
+            Requests ({voucher?.task_users.length})
+          </span>
+          {isStaff && voucher && (
+            <IssueVoucherTaskFormDialog voucherTask={voucher}>
+              <Button variant="outline">
+                <UserRoundPlus /> Issue voucher
+              </Button>
+            </IssueVoucherTaskFormDialog>
+          )}
+        </div>
+        <div className="flex flex-col mb-12">
+          <span className="text-lg mb-3">
+            Pending requests ({pendingRequests?.length})
+          </span>
+          {pendingRequests?.length ? (
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>Date</TableHead>
+                  <TableHead>User</TableHead>
+                  <TableHead>State</TableHead>
+                  <TableHead>Actions</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {pendingRequests.map((taskUser) => (
+                  <TableRow key={taskUser.id}>
+                    <TableCell className="w-48 max-w-48 text-nowrap">
+                      {format(taskUser.created_at, "dd MMM yyyy hh:mm a")}
+                    </TableCell>
+                    <TableCell className="text-wrap">
+                      {taskUser.user.username}
+                    </TableCell>
+                    <TableCell className="text-wrap capitalize w-48 max-w-48">
+                      {taskUser.state}
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          ) : (
+            <div className="flex w-full bg-muted px-4 py-8 rounded justify-center text-muted-foreground">
+              No pending requests
+            </div>
+          )}
+        </div>
+
+        <div className="flex flex-col">
+          <span className="text-lg mb-3">
+            Past requests ({requestHistory?.length})
+          </span>
+          {requestHistory?.length ? (
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>Date</TableHead>
+                  <TableHead>User</TableHead>
+                  <TableHead>State</TableHead>
+                  <TableHead>Actions</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {requestHistory.map((taskUser) => (
+                  <TableRow key={taskUser.id}>
+                    <TableCell className="w-48 max-w-48 text-nowrap">
+                      {format(taskUser.created_at, "dd MMM yyyy hh:mm a")}
+                    </TableCell>
+                    <TableCell className="text-wrap">
+                      {taskUser.user.username}
+                    </TableCell>
+                    <TableCell className="text-wrap capitalize w-48 max-w-48">
+                      {taskUser.state}
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          ) : (
+            <div className="flex w-full bg-muted px-4 py-8 rounded justify-center text-muted-foreground">
+              No past requests
+            </div>
+          )}
+        </div>
+      </div>
     </>
   );
 };

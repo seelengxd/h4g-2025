@@ -3,6 +3,7 @@ import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
 import NewVoucherTaskFormDialog from "@/features/vouchers/new-voucher-form";
 import { getVoucherTasks } from "@/features/vouchers/queries";
+import { useCombinedStore } from "@/store/user/user-store-provider";
 import { useQuery } from "@tanstack/react-query";
 import { ChevronRight, TicketPlus, UsersRound } from "lucide-react";
 import { useState } from "react";
@@ -11,18 +12,27 @@ import { Link } from "react-router";
 const clean = (str: string) => str.toLowerCase().replace(/\s/, "");
 
 const Vouchers = () => {
-  const { data: vouchers } = useQuery(getVoucherTasks());
+  const { data: vouchers, isLoading } = useQuery(getVoucherTasks());
   const [search, setSearch] = useState("");
+  const user = useCombinedStore((store) => store.user);
+
+  const isStaff = user?.role !== "resident";
+  if (!user || isLoading) {
+    return null;
+  }
+
   return (
     <>
       <div className="sticky top-0 bg-white">
         <div className="flex justify-between">
           <h1 className="text-2xl font-light">Manage vouchers</h1>
-          <NewVoucherTaskFormDialog>
-            <Button>
-              <TicketPlus /> Add voucher task
-            </Button>
-          </NewVoucherTaskFormDialog>
+          {isStaff && (
+            <NewVoucherTaskFormDialog>
+              <Button>
+                <TicketPlus /> Add voucher task
+              </Button>
+            </NewVoucherTaskFormDialog>
+          )}
         </div>
 
         <Input

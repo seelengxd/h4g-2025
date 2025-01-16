@@ -13,6 +13,7 @@ from src.voucher_task.schema import (
     ApprovalUpdate,
     VoucherTaskCreate,
     VoucherTaskPublic,
+    VoucherTaskRequestCreate,
     VoucherTaskUpdate,
 )
 
@@ -131,10 +132,10 @@ def join_request(
 def add_request(
     task: Annotated[VoucherTaskPublic, Depends(retrieve_task)],
     session: Annotated[Session, Depends(get_session)],
-    data: ApprovalUpdate,
+    data: VoucherTaskRequestCreate,
 ):
     task_users = [
-        TaskUser(user_id=user_id, state=RequestState.PENDING) for user_id in data.users
+        TaskUser(user_id=user_id, state=data.state) for user_id in data.user_ids
     ]
     task.task_users.extend(task_users)
     session.add(task)

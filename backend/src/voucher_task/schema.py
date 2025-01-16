@@ -39,3 +39,8 @@ class VoucherTaskUpdate(BaseModel):
 
 class ApprovalUpdate(BaseModel):
     task_user_ids: list[int]
+
+
+class VoucherTaskRequestCreate(BaseModel):
+    user_ids: list[int]
+    state: RequestState

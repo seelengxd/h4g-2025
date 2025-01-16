@@ -43,8 +43,8 @@ const Voucher = () => {
   );
 
   return (
-    <>
-      <div className="flex flex-col sticky top-0 bg-white">
+    <div className="w-full h-full flex flex-col fixed overflow-auto">
+      <div className="sticky top-0 bg-white z-50">
         <Breadcrumb className="mb-6">
           <BreadcrumbList>
             <BreadcrumbItem>
@@ -160,7 +160,7 @@ const Voucher = () => {
           )}
         </div>
       </div>
-    </>
+    </div>
   );
 };
 

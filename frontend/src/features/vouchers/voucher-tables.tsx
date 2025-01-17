@@ -12,7 +12,7 @@ import IssueVoucherTaskFormDialog from "@/features/vouchers/issue-voucher-form";
 import RequestStateChip from "@/features/vouchers/request-state-chip";
 import { useCombinedStore } from "@/store/user/user-store-provider";
 import { format } from "date-fns";
-import { UserRoundPlus } from "lucide-react";
+import { TicketPlus } from "lucide-react";
 import { Link } from "react-router";
 
 interface VoucherTableProps {
@@ -21,8 +21,13 @@ interface VoucherTableProps {
 
 const VoucherTable = ({ voucher }: VoucherTableProps) => {
   const user = useCombinedStore((store) => store.user);
+
+  if (!user) {
+    return null;
+  }
+
   const userRequests = voucher?.task_users.filter(
-    (taskUser) => taskUser.user.id === user?.id
+    (taskUser) => taskUser.user.id === user.id
   );
 
   const pendingRequests = userRequests.filter(
@@ -39,16 +44,20 @@ const VoucherTable = ({ voucher }: VoucherTableProps) => {
           My Requests ({userRequests?.length})
         </span>
         {voucher && (
-          <IssueVoucherTaskFormDialog voucherTask={voucher}>
+          <IssueVoucherTaskFormDialog
+            voucherTask={voucher}
+            defaultUserIds={[user.id]}
+            isUserView
+          >
             <Button variant="outline">
-              <UserRoundPlus /> Issue voucher
+              <TicketPlus /> Request voucher
             </Button>
           </IssueVoucherTaskFormDialog>
         )}
       </div>
       <div className="flex flex-col mb-12">
         <span className="text-lg mb-3">
-          Pending requests ({pendingRequests?.length})
+          My pending requests ({pendingRequests?.length})
         </span>
         {pendingRequests?.length ? (
           <Table>
@@ -70,7 +79,7 @@ const VoucherTable = ({ voucher }: VoucherTableProps) => {
                       to={`/users/${taskUser.user.id}`}
                       className="hover:underline"
                     >
-                      {taskUser.user.username}
+                      {taskUser.justification ?? "-"}
                     </Link>
                   </TableCell>
                   <TableCell className="text-wrap capitalize w-48 max-w-48">
@@ -88,7 +97,7 @@ const VoucherTable = ({ voucher }: VoucherTableProps) => {
       </div>
       <div className="flex flex-col">
         <span className="text-lg mb-3">
-          Past requests ({requestHistory?.length})
+          My past requests ({requestHistory?.length})
         </span>
         {requestHistory?.length ? (
           <Table>
@@ -114,12 +123,7 @@ const VoucherTable = ({ voucher }: VoucherTableProps) => {
                     {format(taskUser.created_at, "dd MMM yyyy hh:mm a")}
                   </TableCell>
                   <TableCell className="text-wrap">
-                    <Link
-                      to={`/users/${taskUser.user.id}`}
-                      className="hover:underline"
-                    >
-                      {taskUser.user.username}
-                    </Link>
+                    {taskUser.justification ?? "-"}
                   </TableCell>
                   <TableCell className="text-wrap capitalize w-48 max-w-48">
                     <RequestStateChip state={taskUser.state} />

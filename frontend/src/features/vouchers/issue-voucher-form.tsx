@@ -22,7 +22,6 @@ import { VoucherQueryKeys } from "@/features/vouchers/queries";
 import ErrorAlert from "@/components/form/fields/error-alert";
 import MultiUserField from "@/components/form/fields/multi-user-field";
 import SelectField from "@/components/form/fields/select-field";
-import TextField from "@/components/form/fields/text-field";
 import TextareaField from "@/components/form/fields/textarea-field";
 
 const issueVoucherTaskFormSchema = z.object({
@@ -35,17 +34,22 @@ type IssueVoucherTaskForm = z.infer<typeof issueVoucherTaskFormSchema>;
 
 interface IssueVoucherTaskFormDialogProps {
   voucherTask: VoucherTaskPublic;
+  defaultUserIds?: number[];
+  isUserView?: boolean;
 }
 
 const IssueVoucherTaskFormDialog: React.FC<
   PropsWithChildren & IssueVoucherTaskFormDialogProps
-> = ({ voucherTask, children }) => {
+> = ({ voucherTask, defaultUserIds, isUserView, children }) => {
   const queryClient = useQueryClient();
   const [isOpen, setIsOpen] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const form = useForm<IssueVoucherTaskForm>({
     resolver: zodResolver(issueVoucherTaskFormSchema),
-    defaultValues: { user_ids: [], state: "approved" },
+    defaultValues: {
+      user_ids: defaultUserIds ?? [],
+      state: isUserView ? "pending" : "approved",
+    },
   });
 
   const issueVoucherTaskMutation = useMutation({
@@ -80,22 +84,27 @@ const IssueVoucherTaskFormDialog: React.FC<
             onSubmit={form.handleSubmit(onSubmit)}
           >
             <DialogHeader>
-              <DialogTitle>Issue voucher</DialogTitle>
+              <DialogTitle>
+                {isUserView ? "Request voucher" : "Issue voucher"}
+              </DialogTitle>
             </DialogHeader>
             <div className="grid gap-4 py-4">
               {error && <ErrorAlert message={error} />}
-              <MultiUserField name="user_ids" label="Users" horizontal />
-
-              <SelectField
-                horizontal
-                name="state"
-                label="Request state"
-                options={[
-                  { label: "Pending", value: "pending" },
-                  { label: "Approved", value: "approved" },
-                  { label: "Rejected", value: "rejected" },
-                ]}
-              />
+              {!isUserView && (
+                <>
+                  <MultiUserField name="user_ids" label="Users" horizontal />
+                  <SelectField
+                    horizontal
+                    name="state"
+                    label="Request state"
+                    options={[
+                      { label: "Pending", value: "pending" },
+                      { label: "Approved", value: "approved" },
+                      { label: "Rejected", value: "rejected" },
+                    ]}
+                  />
+                </>
+              )}
               <TextareaField
                 name="justification"
                 label="Justification"

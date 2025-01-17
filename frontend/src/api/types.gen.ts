@@ -33,6 +33,14 @@ export type BarcodeResult = {
     image: string;
 };
 
+export type BaseTransactionPublic = {
+    id: number;
+    amount: number;
+    parent_id: number;
+    parent_type: string;
+    created_at: string;
+};
+
 export type BidCreate = {
     bid: number;
 };
@@ -70,6 +78,30 @@ export type Category = 'food' | 'nonfood' | 'special';
 
 export type HTTPValidationError = {
     detail?: Array<ValidationError>;
+};
+
+export type InventorySummaryReportRow = {
+    id: number;
+    name: string;
+    category: Category;
+    image?: (string | null);
+    total_qty: number;
+    pending_approval: InventorySummaryReportRowDetails;
+    pending_claim: InventorySummaryReportRowDetails;
+    remaining: number;
+};
+
+export type InventorySummaryReportRowDetails = {
+    total: number;
+    orders: Array<InventorySummaryReportRowOrder>;
+};
+
+export type InventorySummaryReportRowOrder = {
+    order_id: number;
+    created_at: string;
+    user_id: number;
+    full_name: string;
+    qty: number;
 };
 
 export type MiniOrderPublic = {
@@ -227,7 +259,7 @@ export type UserPublic = {
     image: (string | null);
     points: number;
     suspended: boolean;
-    transactions: Array<(BidTransactionPublic | OrderTransactionPublic | VoucherTaskTransactionPublic)>;
+    transactions: Array<(BidTransactionPublic | OrderTransactionPublic | VoucherTaskTransactionPublic | BaseTransactionPublic)>;
 };
 
 export type UserUpdate = {
@@ -237,6 +269,7 @@ export type UserUpdate = {
     image?: (string | null);
     suspended: boolean;
     password?: (string | null);
+    points?: (number | null);
 };
 
 export type ValidationError = {
@@ -573,6 +606,18 @@ export type UnrejectRequestsVoucherTaskTaskIdRequestsUnrejectPutData = {
 export type UnrejectRequestsVoucherTaskTaskIdRequestsUnrejectPutResponse = (unknown);
 
 export type UnrejectRequestsVoucherTaskTaskIdRequestsUnrejectPutError = (HTTPValidationError);
+
+export type GetAllReportsReportsGetData = unknown;
+
+export type GetAllReportsReportsGetResponse = (Array<MiniOrderPublic>);
+
+export type GetAllReportsReportsGetError = (HTTPValidationError);
+
+export type GetInventorySummaryReportReportsInventorySummaryReportGetData = unknown;
+
+export type GetInventorySummaryReportReportsInventorySummaryReportGetResponse = (Array<InventorySummaryReportRow>);
+
+export type GetInventorySummaryReportReportsInventorySummaryReportGetError = (HTTPValidationError);
 
 export type GetBarcodeBarcodeBarcodeGetData = {
     path: {

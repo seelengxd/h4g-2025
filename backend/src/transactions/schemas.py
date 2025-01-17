@@ -29,5 +29,8 @@ class VoucherTaskTransactionPublic(BaseTransactionPublic):
 
 
 type TransactionPublic = (
-    BidTransactionPublic | OrderTransactionPublic | VoucherTaskTransactionPublic
+    BaseTransactionPublic
+    | BidTransactionPublic
+    | OrderTransactionPublic
+    | VoucherTaskTransactionPublic
 )

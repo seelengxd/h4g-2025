@@ -7,6 +7,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import { UserIcon } from "lucide-react";
 import { useParams } from "react-router";
+import { Input } from "@/components/ui/input";
 
 const getRandomPassword = () => {
   const asciiLetters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
@@ -25,6 +26,7 @@ const User = () => {
   const { data: user } = useQuery(getUser(Number(id)));
   const updateUserMutation = useUpdateUser(Number(id));
   const [password, setPassword] = useState("");
+  const [value, setValue] = useState(1);
 
   if (!user) {
     return null;
@@ -50,6 +52,13 @@ const User = () => {
         },
       }
     );
+  };
+
+  const addPoints = () => {
+    updateUserMutation.mutate({
+      ...user,
+      points: user.points + value,
+    });
   };
 
   return (
@@ -103,6 +112,19 @@ const User = () => {
           <Button variant={"secondary"} onClick={toggleSuspension}>
             Suspend
           </Button>
+          <div className="flex gap-2">
+            <Input
+              id="name"
+              type="number"
+              defaultValue={1}
+              min={1}
+              className="col-span-3"
+              onChange={(e) => setValue(Number(e.target.value))}
+            />
+            <Button variant={"secondary"} onClick={() => addPoints()}>
+              Add points
+            </Button>
+          </div>
         </div>
       </div>
       <hr className="mt-6" />

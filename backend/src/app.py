@@ -15,6 +15,7 @@ from src.products import router as products
 from src.orders import router as orders
 from src.auctions import router as auctions
 from src.voucher_task import router as voucher_task
+from src.reports import router as reports
 from src.barcode import router as barcode
 
 
@@ -44,7 +45,7 @@ authenticated_router.include_router(products.router)
 authenticated_router.include_router(orders.router)
 authenticated_router.include_router(auctions.router)
 authenticated_router.include_router(voucher_task.router)
+authenticated_router.include_router(reports.router)
 authenticated_router.include_router(barcode.router)
-
 
 server.include_router(authenticated_router)

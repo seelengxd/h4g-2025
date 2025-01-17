@@ -97,7 +97,6 @@ const ProductFormDialog: React.FC<PropsWithChildren & OwnProps> = ({
                       if (!response.data) {
                         return;
                       }
-
                       const data = response.data;
                       form.setValue("name", data.name);
                       form.setValue("image", data.image);

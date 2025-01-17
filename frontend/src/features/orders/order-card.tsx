@@ -58,9 +58,14 @@ const OrderCard: React.FC<OwnProps> = ({ order }) => {
                 className="h-24 w-24 min-h-24 min-w-24"
               />
               <div className="flex flex-col ml-6 w-full">
-                <p className="mb-1 line-clamp-1 overflow-ellipsis">
-                  {orderProduct.product.name}
-                </p>
+                <Link
+                  to={`/products/${orderProduct.product.id}`}
+                  className="hover:opacity-80"
+                >
+                  <p className="mb-1 line-clamp-1 overflow-ellipsis">
+                    {orderProduct.product.name}
+                  </p>
+                </Link>
                 <div className="text-sm flex items-center gap-2">
                   <span className="text-muted-foreground line-clamp-1">
                     {orderProduct.product.points} points

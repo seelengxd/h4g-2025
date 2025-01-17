@@ -35,8 +35,10 @@ const Reports = () => {
   const [stats, setStats] = useState({ claimed: 0, pending: 0, rejected: 0, approved: 0, totalPoints: 0 });
   type DataType = GetAllOrdersOrdersGetResponse | GetAllProductsProductsGetResponse;
   const [data, setData] = useState<DataType | undefined>(undefined);
+  const [filteredOrders, setFilteredOrders] = useState<MiniOrderPublic[]>([]);
 
 
+  // -------------------------------- functions for weekly request --------------------------------
   const handleDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     const isValidFormat = /^\d{4}-\d{2}-\d{2}$/.test(value);
@@ -58,10 +60,15 @@ const Reports = () => {
         return;
       }
 
-      const filteredOrders = orders.filter((order) => {
+      const filtered = orders.filter((order) => {
         const createdAt = new Date(order.created_at);
         return createdAt >= startDate && createdAt <= endDate;
       });
+  
+      // This will set the state with the filtered orders
+      setFilteredOrders(filtered);
+
+      
 
       const claimed = filteredOrders.filter((order) => order.state === "claimed").length;
       const pending = filteredOrders.filter((order) => order.state === "pending").length;
@@ -84,22 +91,14 @@ const Reports = () => {
     filterOrders();
   }, [orders, dateRange]);
 
-  useEffect(() => {
-    setData([]);
-    if (toggle === "Go to Inventory Summary Report") {
-      setData(products);
-    } else {
-      setData(orders);
-    }
-  }, [toggle, orders]);
+  // -------------------------------- functions for inventory summary --------------------------------
+  
 
   const handleToggle = () => {
-    setData([]);
     setToggle(toggle === "Go to Inventory Summary Report" 
       ? "Go to Weekly Request Summary Report" 
       : "Go to Inventory Summary Report");
   };
-
     
   return (
     <div>
@@ -111,18 +110,19 @@ const Reports = () => {
         <Button
            variant="outline"
            size="sm"
-           className="bg-blue-500 text-white hover:bg-blue-300 w-[230px]"
+           className="bg-blue-500 text-white hover:bg-blue-300 w-[250px]"
            onClick={handleToggle}
          >
          {toggle}
-         </Button>
+        </Button>
       
-         {toggle === "Go to Inventory Summary Report" ? (
-            <RequestTable data={orders}/>
-          ) : (
+        {toggle === "Go to Inventory Summary Report" ? (
+            <RequestTable data={filteredOrders}/>
+        ) : (
             <InventoryTable data={products}/>
-          )}
+        )}
           
+        {toggle === "Go to Inventory Summary Report" && (
         <div className="flex items-center gap-4 pt-4 pb-12">
           <div>
             <label htmlFor="start" className="block text-sm font-small">
@@ -151,10 +151,11 @@ const Reports = () => {
             />
           </div>
         </div>
+      )}
         {toggle === "Go to Inventory Summary Report" ? (
-          <InventorySummaryStats stats={stats} />
-        ) : (
           <WeeklyRequestSummaryStats stats={stats} />
+        ) : (
+          <InventorySummaryStats stats={stats} />
         )}
 
       </div>

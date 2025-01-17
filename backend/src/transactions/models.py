@@ -34,6 +34,6 @@ class Transaction(Base):
     )
     task_user: Mapped[TaskUser | None] = relationship(
         "TaskUser",
-        backref="transactions",
+        back_populates="transactions",
         primaryjoin=and_(parent_id == foreign(TaskUser.id), parent_type == "task_user"),
     )

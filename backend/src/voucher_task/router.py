@@ -13,6 +13,7 @@ from src.voucher_task.schema import (
     ApprovalUpdate,
     VoucherTaskCreate,
     VoucherTaskJoinRequest,
+    MiniVoucherTaskPublic,
     VoucherTaskPublic,
     VoucherTaskRequestCreate,
     VoucherTaskUpdate,
@@ -26,7 +27,7 @@ router = APIRouter(prefix="/voucher_task", tags=["voucher_task"])
 def get_all_tasks(
     session: Annotated[Session, Depends(get_session)],
     user: Annotated[User, Depends(get_current_user)],
-) -> list[VoucherTaskPublic]:
+) -> list[MiniVoucherTaskPublic]:
     query = (
         select(VoucherTask)
         .where(VoucherTask.hidden == False)  # noqa: E712
@@ -50,7 +51,10 @@ def get_task(
         select(VoucherTask)
         .where(VoucherTask.id == task_id)
         .where(VoucherTask.hidden == False)  # noqa: E712
-        .options(selectinload(VoucherTask.task_users, TaskUser.user))
+        .options(
+            selectinload(VoucherTask.task_users, TaskUser.user),
+            selectinload(VoucherTask.task_users, TaskUser.transactions),
+        )
     )
 
     if not task:
@@ -68,7 +72,7 @@ def get_task(
 def add_task(
     data: VoucherTaskCreate,
     session: Annotated[Session, Depends(get_session)],
-) -> VoucherTaskPublic:
+) -> MiniVoucherTaskPublic:
     task = VoucherTask(
         task_name=data.task_name, points=data.points, description=data.description
     )
@@ -88,8 +92,8 @@ def update_task(
     data: VoucherTaskUpdate,
     session: Annotated[Session, Depends(get_session)],
     user: Annotated[User, Depends(get_current_user)],
-    task: Annotated[VoucherTaskPublic, Depends(retrieve_task)],
-) -> VoucherTaskPublic:
+    task: Annotated[MiniVoucherTaskPublic, Depends(retrieve_task)],
+) -> MiniVoucherTaskPublic:
     if not user.role.is_staff():
         raise HTTPException(status_code=403, detail="Forbidden")
 
@@ -104,7 +108,7 @@ def update_task(
 def delete_task(
     session: Annotated[Session, Depends(get_session)],
     user: Annotated[User, Depends(get_current_user)],
-    task: Annotated[VoucherTaskPublic, Depends(retrieve_task)],
+    task: Annotated[MiniVoucherTaskPublic, Depends(retrieve_task)],
 ):
     """This only hides the task."""
 
@@ -122,7 +126,7 @@ def delete_task(
 def join_request(
     session: Annotated[Session, Depends(get_session)],
     user: Annotated[User, Depends(get_current_user)],
-    task: Annotated[VoucherTaskPublic, Depends(retrieve_task)],
+    task: Annotated[MiniVoucherTaskPublic, Depends(retrieve_task)],
     data: VoucherTaskJoinRequest,
 ):
     task_user = TaskUser(
@@ -136,7 +140,7 @@ def join_request(
 
 @router.post("/{task_id}/requests")
 def add_request(
-    task: Annotated[VoucherTaskPublic, Depends(retrieve_task)],
+    task: Annotated[MiniVoucherTaskPublic, Depends(retrieve_task)],
     session: Annotated[Session, Depends(get_session)],
     data: VoucherTaskRequestCreate,
 ):
@@ -166,7 +170,7 @@ def add_request(
 
 @router.put("/{task_id}/requests/approve")
 def approve_requests(
-    task: Annotated[VoucherTaskPublic, Depends(retrieve_task)],
+    task: Annotated[MiniVoucherTaskPublic, Depends(retrieve_task)],
     session: Annotated[Session, Depends(get_session)],
     data: ApprovalUpdate,
 ):
@@ -188,7 +192,7 @@ def approve_requests(
 
 @router.put("/{task_id}/requests/reject")
 def reject_requests(
-    task: Annotated[VoucherTaskPublic, Depends(retrieve_task)],
+    task: Annotated[MiniVoucherTaskPublic, Depends(retrieve_task)],
     session: Annotated[Session, Depends(get_session)],
     data: ApprovalUpdate,
 ):
@@ -201,7 +205,7 @@ def reject_requests(
 
 @router.put("/{task_id}/requests/unapprove")
 def unapprove_requests(
-    task: Annotated[VoucherTaskPublic, Depends(retrieve_task)],
+    task: Annotated[MiniVoucherTaskPublic, Depends(retrieve_task)],
     session: Annotated[Session, Depends(get_session)],
     data: ApprovalUpdate,
 ):
@@ -222,7 +226,7 @@ def unapprove_requests(
 
 @router.put("/{task_id}/requests/unreject")
 def unreject_requests(
-    task: Annotated[VoucherTaskPublic, Depends(retrieve_task)],
+    task: Annotated[MiniVoucherTaskPublic, Depends(retrieve_task)],
     session: Annotated[Session, Depends(get_session)],
     data: ApprovalUpdate,
 ):

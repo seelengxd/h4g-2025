@@ -61,9 +61,10 @@ export const useUpdateUser = (id: number) => {
       role: Role;
       suspended: boolean;
       password?: string;
+      points?: number;
     }) => updateUserUsersUserIdPut({ path: { user_id: id }, body: data }),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: [UserQueryKeys.Users] });
+      queryClient.invalidateQueries({ queryKey: [UserQueryKeys.Users, id] });
     },
   });
 };

@@ -1,16 +1,17 @@
 import { Button } from "@/components/ui/button";
 import CartButton from "@/features/orders/cart-button";
-import OrderSheet from "@/features/orders/order-sheet";
 import { getProduct } from "@/features/products/queries";
 import UpdateProductFormDialog from "@/features/products/update-product-form";
 import { useCombinedStore } from "@/store/user/user-store-provider";
 import { useQuery } from "@tanstack/react-query";
-import { ChevronLeft, DollarSign, Luggage, Plus } from "lucide-react";
-import { GoPencil } from "react-icons/go";
+import { ChevronLeft, DollarSign, Luggage, Edit } from "lucide-react";
 import { Link, Navigate, useParams } from "react-router";
 import ProductImage from "../../features/products/product-image";
 import AuditLogTable from "@/features/audit-logs/audit-log-table";
 import AddToCartButton from "@/features/orders/add-to-cart-button";
+
+import TransactionTable from "@/features/products/transactions-table";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 const Product = () => {
   const { id } = useParams<"id">();
@@ -58,7 +59,7 @@ const Product = () => {
           {isStaff && (
             <UpdateProductFormDialog product={product}>
               <Button className="mt-4">
-                <GoPencil className="w-4 h-4" />
+                <Edit className="w-4 h-4" />
                 Edit product
               </Button>
             </UpdateProductFormDialog>
@@ -72,7 +73,38 @@ const Product = () => {
         <h3 className="mb-2 leading-4 tracking-tight text-slate-600">
           Past transactions
         </h3>
-        <div>Coming soon...</div>
+        <Tabs defaultValue="all">
+          <TabsList>
+            <TabsTrigger value="all">All</TabsTrigger>
+            <TabsTrigger value="pending">Pending</TabsTrigger>
+            <TabsTrigger value="approved">Approved</TabsTrigger>
+            <TabsTrigger value="failed">Failed</TabsTrigger>
+          </TabsList>
+          <TabsContent value="all">
+            <TransactionTable transactions={product.order_products} />
+          </TabsContent>
+          <TabsContent value="pending">
+            <TransactionTable
+              transactions={product.order_products.filter(
+                (transaction) => transaction.order_state === "pending"
+              )}
+            />
+          </TabsContent>
+          <TabsContent value="approved">
+            <TransactionTable
+              transactions={product.order_products.filter((transaction) =>
+                ["approved", "claimed"].includes(transaction.order_state)
+              )}
+            />
+          </TabsContent>
+          <TabsContent value="failed">
+            <TransactionTable
+              transactions={product.order_products.filter((transaction) =>
+                ["rejected", "withdrawn"].includes(transaction.order_state)
+              )}
+            />
+          </TabsContent>
+        </Tabs>
       </div>
       {/* Audit log */}
       <hr className="mt-6" />

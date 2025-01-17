@@ -18,7 +18,7 @@ type OwnProps = {
 const TransactionCard: React.FC<OwnProps> = ({ transaction }) => {
   const link =
     transaction.parent_type === "task_user"
-      ? `/tasks/${
+      ? `/vouchers/${
           (transaction as VoucherTaskTransactionPublic).task_user.task_id
         }`
       : transaction.parent_type === "bid"
@@ -36,6 +36,9 @@ const TransactionCard: React.FC<OwnProps> = ({ transaction }) => {
               Task #
               {(transaction as VoucherTaskTransactionPublic).task_user.task_id}
             </p>
+          )}
+          {transaction.parent_type === "adhoc" && (
+            <p className="font-semibold">Adhoc top-up</p>
           )}
           {transaction.parent_type === "bid" && (
             <p className="font-semibold">
@@ -59,7 +62,7 @@ const TransactionCard: React.FC<OwnProps> = ({ transaction }) => {
             "text-green-600": transaction.amount > 0,
           })}
         >
-          {Math.abs(transaction.amount)} pts
+          {transaction.amount} pts
         </p>
       </Card>
     </Link>

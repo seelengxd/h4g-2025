@@ -3,7 +3,7 @@ from pydantic import BaseModel, ConfigDict
 
 from src.auctions.schemas import BidPublic
 from src.orders.schemas import OrderPublic
-from src.voucher_task.schema import TaskUserPublic
+from src.voucher_task.schema import MiniTaskUserPublic
 
 
 class BaseTransactionPublic(BaseModel):
@@ -25,9 +25,12 @@ class OrderTransactionPublic(BaseTransactionPublic):
 
 
 class VoucherTaskTransactionPublic(BaseTransactionPublic):
-    task_user: TaskUserPublic
+    task_user: MiniTaskUserPublic
 
 
 type TransactionPublic = (
-    BidTransactionPublic | OrderTransactionPublic | VoucherTaskTransactionPublic
+    BaseTransactionPublic
+    | BidTransactionPublic
+    | OrderTransactionPublic
+    | VoucherTaskTransactionPublic
 )

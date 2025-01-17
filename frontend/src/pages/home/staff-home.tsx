@@ -1,7 +1,4 @@
-import { Badge } from "@/components/ui/badge";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { getOrders } from "@/features/orders/queries";
-import ProductImage from "@/features/products/product-image";
 import { useCombinedStore } from "@/store/user/user-store-provider";
 import { useQuery } from "@tanstack/react-query";
 import OrderCard from "../../features/orders/order-card";

@@ -7,6 +7,7 @@ from src.audit_logs.models import AuditLog
 from src.auth.dependencies import get_current_user
 from src.auth.models import User
 from src.common.dependencies import get_session
+from src.orders.models import Order, OrderProduct
 from src.products.models import Product
 from src.products.schemas import ProductCreate, MiniProductPublic, ProductPublic
 
@@ -29,7 +30,10 @@ def get_product(
     product = session.scalar(
         select(Product)
         .where(Product.id == product_id)
-        .options(selectinload(Product.logs))
+        .options(
+            selectinload(Product.logs),
+            selectinload(Product.order_products, OrderProduct.order, Order.user),
+        )
     )
     if not product:
         raise HTTPException(status_code=404, detail="Product not found")

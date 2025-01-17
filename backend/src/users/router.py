@@ -11,6 +11,8 @@ from src.auth.schemas import UserPublic
 from sqlalchemy.orm import Session
 from string import ascii_letters, digits
 
+from src.transactions.models import Transaction
+
 
 router = APIRouter(prefix="/users", tags=["users"])
 
@@ -71,6 +73,15 @@ def update_user(
         user.image = data.image
     if data.password is not None:
         user.hashed_password = get_password_hash(data.password)
+    if data.points is not None:
+        transaction = Transaction(
+            amount=data.points - user.points,
+            parent_id=0,
+            parent_type="adhoc",
+            user_id=user.id,
+        )
+        user.points = data.points
+        session.add(transaction)
 
     session.commit()
     return user

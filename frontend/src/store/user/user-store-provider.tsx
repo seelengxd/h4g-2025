@@ -6,9 +6,13 @@ import {
   UserState,
   UserStore,
 } from "@/store/user/user-store";
-import { CartState, CartStore, defaultCartState } from "../cart/cart-store";
+import {
+  CartState,
+  CartStore,
+  defaultCartState,
+  OrderProduct,
+} from "../cart/cart-store";
 import { UserPublic } from "@/api";
-import { OrderProductCreate } from "@/api";
 
 export type CombinedStore = UserStore & CartStore;
 export type CombinedStoreApi = StoreApi<CombinedStore>;
@@ -23,7 +27,7 @@ export const createCombinedStore = (
   return createStore<CombinedStore>()((set) => ({
     ...initState,
     setUser: (user?: UserPublic) => set(() => ({ user, isLoading: false })),
-    setCart: (cart?: OrderProductCreate[]) => set(() => ({ items: cart })),
+    setCart: (cart?: OrderProduct[]) => set(() => ({ items: cart })),
   }));
 };
 

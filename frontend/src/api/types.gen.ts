@@ -28,6 +28,11 @@ export type AuditLogPublic = {
     created_at: string;
 };
 
+export type BarcodeResult = {
+    name: string;
+    image: string;
+};
+
 export type BidCreate = {
     bid: number;
 };
@@ -84,12 +89,37 @@ export type MiniProductPublic = {
     total_qty: number;
 };
 
+export type MiniTaskUserPublic = {
+    id: number;
+    task_id: number;
+    user: MiniUserPublic;
+    state: RequestState;
+    created_at: string;
+    updated_at: string;
+    justification?: (string | null);
+    transactions: Array<MiniTransactionPublic>;
+};
+
+export type MiniTransactionPublic = {
+    amount: number;
+};
+
 export type MiniUserPublic = {
     id: number;
     role: Role;
     full_name: string;
     username: string;
     image: (string | null);
+};
+
+export type MiniVoucherTaskPublic = {
+    id: number;
+    task_name: string;
+    points: number;
+    task_users: Array<MiniTaskUserPublic>;
+    created_at: string;
+    updated_at: string;
+    description?: (string | null);
 };
 
 export type OrderCreate = {
@@ -156,20 +186,25 @@ export type ProductPublic = {
     points: number;
     total_qty: number;
     logs: Array<AuditLogPublic>;
+    order_products: Array<ProductTransactionPublic>;
+};
+
+/**
+ * This is scuffed, but its actually order product (but from product pov instead of orders)
+ */
+export type ProductTransactionPublic = {
+    id: number;
+    order_id: number;
+    user: MiniUserPublic;
+    order_state: OrderState;
+    points: number;
+    qty: number;
+    created_at: string;
 };
 
 export type RequestState = 'pending' | 'approved' | 'rejected';
 
 export type Role = 'resident' | 'staff' | 'admin';
-
-export type TaskUserPublic = {
-    id: number;
-    task_id: number;
-    user: MiniUserPublic;
-    state: RequestState;
-    created_at: string;
-    updated_at: string;
-};
 
 export type Token = {
     access_token: string;
@@ -202,6 +237,7 @@ export type UserUpdate = {
     image?: (string | null);
     suspended: boolean;
     password?: (string | null);
+    points?: (number | null);
 };
 
 export type ValidationError = {
@@ -213,16 +249,28 @@ export type ValidationError = {
 export type VoucherTaskCreate = {
     task_name: string;
     points: number;
+    description?: (string | null);
     task_users: (Array<(number)> | null);
+};
+
+export type VoucherTaskJoinRequest = {
+    justification?: (string | null);
 };
 
 export type VoucherTaskPublic = {
     id: number;
     task_name: string;
     points: number;
-    task_users: Array<TaskUserPublic>;
+    task_users: Array<MiniTaskUserPublic>;
     created_at: string;
     updated_at: string;
+    description?: (string | null);
+};
+
+export type VoucherTaskRequestCreate = {
+    user_ids: Array<(number)>;
+    justification?: (string | null);
+    state: RequestState;
 };
 
 export type VoucherTaskTransactionPublic = {
@@ -231,12 +279,13 @@ export type VoucherTaskTransactionPublic = {
     parent_id: number;
     parent_type: string;
     created_at: string;
-    task_user: TaskUserPublic;
+    task_user: MiniTaskUserPublic;
 };
 
 export type VoucherTaskUpdate = {
     task_name: string;
     points: number;
+    description?: (string | null);
 };
 
 export type LogInAuthLoginPostData = {
@@ -417,7 +466,7 @@ export type MakeBidAuctionsAuctionIdBidsPostError = (HTTPValidationError);
 
 export type GetAllTasksVoucherTaskGetData = unknown;
 
-export type GetAllTasksVoucherTaskGetResponse = (Array<VoucherTaskPublic>);
+export type GetAllTasksVoucherTaskGetResponse = (Array<MiniVoucherTaskPublic>);
 
 export type GetAllTasksVoucherTaskGetError = (HTTPValidationError);
 
@@ -425,7 +474,7 @@ export type AddTaskVoucherTaskPostData = {
     body: VoucherTaskCreate;
 };
 
-export type AddTaskVoucherTaskPostResponse = (VoucherTaskPublic);
+export type AddTaskVoucherTaskPostResponse = (MiniVoucherTaskPublic);
 
 export type AddTaskVoucherTaskPostError = (HTTPValidationError);
 
@@ -446,7 +495,7 @@ export type UpdateTaskVoucherTaskTaskIdPutData = {
     };
 };
 
-export type UpdateTaskVoucherTaskTaskIdPutResponse = (VoucherTaskPublic);
+export type UpdateTaskVoucherTaskTaskIdPutResponse = (MiniVoucherTaskPublic);
 
 export type UpdateTaskVoucherTaskTaskIdPutError = (HTTPValidationError);
 
@@ -461,6 +510,7 @@ export type DeleteTaskVoucherTaskTaskIdDeleteResponse = (unknown);
 export type DeleteTaskVoucherTaskTaskIdDeleteError = (HTTPValidationError);
 
 export type JoinRequestVoucherTaskTaskIdRequestsJoinPostData = {
+    body: VoucherTaskJoinRequest;
     path: {
         task_id: number;
     };
@@ -471,7 +521,7 @@ export type JoinRequestVoucherTaskTaskIdRequestsJoinPostResponse = (unknown);
 export type JoinRequestVoucherTaskTaskIdRequestsJoinPostError = (HTTPValidationError);
 
 export type AddRequestVoucherTaskTaskIdRequestsPostData = {
-    body: ApprovalUpdate;
+    body: VoucherTaskRequestCreate;
     path: {
         task_id: number;
     };
@@ -525,8 +575,19 @@ export type UnrejectRequestsVoucherTaskTaskIdRequestsUnrejectPutResponse = (unkn
 
 export type UnrejectRequestsVoucherTaskTaskIdRequestsUnrejectPutError = (HTTPValidationError);
 
+
 export type GetAllReportsReportsGetData = unknown;
 
 export type GetAllReportsReportsGetResponse = (Array<MiniOrderPublic>);
 
 export type GetAllReportsReportsGetError = (HTTPValidationError);
+
+export type GetBarcodeBarcodeBarcodeGetData = {
+    path: {
+        barcode: string;
+    };
+};
+
+export type GetBarcodeBarcodeBarcodeGetResponse = (BarcodeResult);
+
+export type GetBarcodeBarcodeBarcodeGetError = (HTTPValidationError);

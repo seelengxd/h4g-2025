@@ -12,7 +12,10 @@ from src.voucher_task.models import RequestState, TaskUser, VoucherTask
 from src.voucher_task.schema import (
     ApprovalUpdate,
     VoucherTaskCreate,
+    VoucherTaskJoinRequest,
+    MiniVoucherTaskPublic,
     VoucherTaskPublic,
+    VoucherTaskRequestCreate,
     VoucherTaskUpdate,
 )
 
@@ -24,7 +27,7 @@ router = APIRouter(prefix="/voucher_task", tags=["voucher_task"])
 def get_all_tasks(
     session: Annotated[Session, Depends(get_session)],
     user: Annotated[User, Depends(get_current_user)],
-) -> list[VoucherTaskPublic]:
+) -> list[MiniVoucherTaskPublic]:
     query = (
         select(VoucherTask)
         .where(VoucherTask.hidden == False)  # noqa: E712
@@ -48,7 +51,10 @@ def get_task(
         select(VoucherTask)
         .where(VoucherTask.id == task_id)
         .where(VoucherTask.hidden == False)  # noqa: E712
-        .options(selectinload(VoucherTask.task_users, TaskUser.user))
+        .options(
+            selectinload(VoucherTask.task_users, TaskUser.user),
+            selectinload(VoucherTask.task_users, TaskUser.transactions),
+        )
     )
 
     if not task:
@@ -66,8 +72,10 @@ def get_task(
 def add_task(
     data: VoucherTaskCreate,
     session: Annotated[Session, Depends(get_session)],
-) -> VoucherTaskPublic:
-    task = VoucherTask(task_name=data.task_name, points=data.points)
+) -> MiniVoucherTaskPublic:
+    task = VoucherTask(
+        task_name=data.task_name, points=data.points, description=data.description
+    )
     if data.task_users:
         task.task_users = [
             TaskUser(user_id=user_id, state=RequestState.PENDING)
@@ -84,8 +92,8 @@ def update_task(
     data: VoucherTaskUpdate,
     session: Annotated[Session, Depends(get_session)],
     user: Annotated[User, Depends(get_current_user)],
-    task: Annotated[VoucherTaskPublic, Depends(retrieve_task)],
-) -> VoucherTaskPublic:
+    task: Annotated[MiniVoucherTaskPublic, Depends(retrieve_task)],
+) -> MiniVoucherTaskPublic:
     if not user.role.is_staff():
         raise HTTPException(status_code=403, detail="Forbidden")
 
@@ -100,7 +108,7 @@ def update_task(
 def delete_task(
     session: Annotated[Session, Depends(get_session)],
     user: Annotated[User, Depends(get_current_user)],
-    task: Annotated[VoucherTaskPublic, Depends(retrieve_task)],
+    task: Annotated[MiniVoucherTaskPublic, Depends(retrieve_task)],
 ):
     """This only hides the task."""
 
@@ -118,9 +126,12 @@ def delete_task(
 def join_request(
     session: Annotated[Session, Depends(get_session)],
     user: Annotated[User, Depends(get_current_user)],
-    task: Annotated[VoucherTaskPublic, Depends(retrieve_task)],
+    task: Annotated[MiniVoucherTaskPublic, Depends(retrieve_task)],
+    data: VoucherTaskJoinRequest,
 ):
-    task_user = TaskUser(user_id=user.id, state=RequestState.PENDING)
+    task_user = TaskUser(
+        user_id=user.id, state=RequestState.PENDING, justification=data.justification
+    )
     task.task_users.append(task_user)
     session.add(task_user)
     session.commit()
@@ -129,22 +140,37 @@ def join_request(
 
 @router.post("/{task_id}/requests")
 def add_request(
-    task: Annotated[VoucherTaskPublic, Depends(retrieve_task)],
+    task: Annotated[MiniVoucherTaskPublic, Depends(retrieve_task)],
     session: Annotated[Session, Depends(get_session)],
-    data: ApprovalUpdate,
+    data: VoucherTaskRequestCreate,
 ):
     task_users = [
-        TaskUser(user_id=user_id, state=RequestState.PENDING) for user_id in data.users
+        TaskUser(user_id=user_id, state=data.state, justification=data.justification)
+        for user_id in data.user_ids
     ]
     task.task_users.extend(task_users)
     session.add(task)
+    session.flush()
+
+    if data.state == RequestState.APPROVED:
+        for task_user in task_users:
+            task_user.user.points += task.points
+            transaction = Transaction(
+                user_id=task_user.user_id,
+                amount=task.points,
+                parent_id=task_user.id,
+                parent_type="task_user",
+            )
+            session.add(transaction)
+            session.add(task_user)
+
     session.commit()
     return task
 
 
 @router.put("/{task_id}/requests/approve")
 def approve_requests(
-    task: Annotated[VoucherTaskPublic, Depends(retrieve_task)],
+    task: Annotated[MiniVoucherTaskPublic, Depends(retrieve_task)],
     session: Annotated[Session, Depends(get_session)],
     data: ApprovalUpdate,
 ):
@@ -166,12 +192,12 @@ def approve_requests(
 
 @router.put("/{task_id}/requests/reject")
 def reject_requests(
-    task: Annotated[VoucherTaskPublic, Depends(retrieve_task)],
+    task: Annotated[MiniVoucherTaskPublic, Depends(retrieve_task)],
     session: Annotated[Session, Depends(get_session)],
     data: ApprovalUpdate,
 ):
     for task_user in task.task_users:
-        if task_user.user_id in data.task_user_ids:
+        if task_user.id in data.task_user_ids:
             task_user.state = RequestState.REJECTED
             session.add(task_user)
     session.commit()
@@ -179,7 +205,7 @@ def reject_requests(
 
 @router.put("/{task_id}/requests/unapprove")
 def unapprove_requests(
-    task: Annotated[VoucherTaskPublic, Depends(retrieve_task)],
+    task: Annotated[MiniVoucherTaskPublic, Depends(retrieve_task)],
     session: Annotated[Session, Depends(get_session)],
     data: ApprovalUpdate,
 ):
@@ -200,7 +226,7 @@ def unapprove_requests(
 
 @router.put("/{task_id}/requests/unreject")
 def unreject_requests(
-    task: Annotated[VoucherTaskPublic, Depends(retrieve_task)],
+    task: Annotated[MiniVoucherTaskPublic, Depends(retrieve_task)],
     session: Annotated[Session, Depends(get_session)],
     data: ApprovalUpdate,
 ):

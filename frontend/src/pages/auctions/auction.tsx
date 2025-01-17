@@ -39,8 +39,6 @@ const Auction = () => {
     }
   }, [auction, bidPoints]);
 
-  const [error, setError] = useState("");
-
   if (isLoading || !user) {
     return null;
   }

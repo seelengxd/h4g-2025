@@ -1,9 +1,13 @@
 from enum import Enum
+from typing import TYPE_CHECKING
 from sqlalchemy import and_, ForeignKey
 from src.audit_logs.models import AuditLog
 from src.common.base import Base
 from src.auth.models import User
 from sqlalchemy.orm import Mapped, relationship, mapped_column, foreign
+
+if TYPE_CHECKING:
+    from src.transactions.models import Transaction
 
 
 class VoucherTask(Base):
@@ -13,7 +17,7 @@ class VoucherTask(Base):
     task_name: Mapped[str] = mapped_column(nullable=False)
     points: Mapped[int] = mapped_column(nullable=False)
     hidden: Mapped[bool] = mapped_column(server_default="false", nullable=False)
-    description: Mapped[str] = mapped_column(server_default="", nullable=False)
+    description: Mapped[str | None] = mapped_column(nullable=True)
 
     task_users: Mapped[list["TaskUser"]] = relationship(
         "TaskUser", back_populates="task"
@@ -47,6 +51,15 @@ class TaskUser(Base):
     state: Mapped[RequestState] = mapped_column(
         default=RequestState.PENDING, nullable=False
     )
+    justification: Mapped[str | None] = mapped_column(nullable=True)
 
-    user: Mapped[User] = relationship("User", backref="tasks_users")
+    user: Mapped[User] = relationship("User", backref="task_users")
     task: Mapped[VoucherTask] = relationship("VoucherTask", back_populates="task_users")
+
+    transactions: Mapped[list["Transaction"]] = relationship(
+        "Transaction",
+        back_populates="task_user",
+        primaryjoin="and_(foreign(TaskUser.id) == Transaction.parent_id, Transaction.parent_type == 'task_user')",
+        order_by="Transaction.created_at.desc()",
+        uselist=True,
+    )

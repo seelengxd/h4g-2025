@@ -67,7 +67,9 @@ function SelectField({
                 </SelectTrigger>
                 <SelectContent>
                   {options.map((option) => (
-                    <SelectItem value={option.value}>{option.label}</SelectItem>
+                    <SelectItem value={option.value} key={option.value}>
+                      {option.label}
+                    </SelectItem>
                   ))}
                 </SelectContent>
               </Select>

@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/dialog";
 import { Form } from "@/components/ui/form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { PropsWithChildren } from "react";
+import { PropsWithChildren, useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { z } from "zod";
 import ErrorAlert from "@/components/form/fields/error-alert";
@@ -19,6 +19,10 @@ import { uploadFile } from "../files/utils";
 import NumberField from "@/components/form/fields/number-field";
 import SelectField from "@/components/form/fields/select-field";
 import { DialogClose } from "@radix-ui/react-dialog";
+import { getBarcodeBarcodeBarcodeGet } from "@/api";
+import { BarcodeIcon } from "lucide-react";
+import "react-barcode-scanner/polyfill";
+import BarcodeScanner from "./barcode-scanner";
 
 const productFormSchema = z.object({
   name: z.string(),
@@ -59,6 +63,7 @@ const ProductFormDialog: React.FC<PropsWithChildren & OwnProps> = ({
     defaultValues: defaultValues ?? newProductFormDefault,
   });
 
+  const [showBarcodeScanner, setShowBarcodeScanner] = useState(false);
   return (
     <Dialog
       onOpenChange={(open) => {
@@ -80,6 +85,26 @@ const ProductFormDialog: React.FC<PropsWithChildren & OwnProps> = ({
               <DialogTitle>{title}</DialogTitle>
             </DialogHeader>
             <div className="grid gap-4 py-4">
+              <Button onClick={() => setShowBarcodeScanner(true)} type="button">
+                <BarcodeIcon /> Scan Barcode
+              </Button>
+              {showBarcodeScanner && (
+                <BarcodeScanner
+                  handleDecodeResult={(result) => {
+                    getBarcodeBarcodeBarcodeGet({
+                      path: { barcode: result },
+                    }).then((response) => {
+                      if (!response.data) {
+                        return;
+                      }
+                      const data = response.data;
+                      form.setValue("name", data.name);
+                      form.setValue("image", data.image);
+                      setShowBarcodeScanner(false);
+                    });
+                  }}
+                />
+              )}
               <TextField name="name" label="Name" horizontal />
               <NumberField name="total_qty" label="Quantity" horizontal />
               <NumberField name="points" label="Points" horizontal />

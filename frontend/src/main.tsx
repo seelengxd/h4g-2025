@@ -7,6 +7,7 @@ import { BrowserRouter, Route, Routes } from "react-router";
 import { StoreProvider } from "@/store/store-provider.tsx";
 import AuthenticatedPage from "./components/layout/authenticated-page";
 import Layout from "./components/layout/layout";
+
 import Auction from "./pages/auctions/auction";
 import Auctions from "./pages/auctions/auctions";
 import Login from "./pages/auth/login";
@@ -18,6 +19,10 @@ import Products from "./pages/products/products";
 import Reports from "./pages/reports/reports";
 import User from "./pages/users/User";
 import Users from "./pages/users/Users";
+import AuthenticatedPage from "./components/layout/authenticated-page";
+import Vouchers from "./pages/vouchers/vouchers";
+import Voucher from "./pages/vouchers/voucher";
+
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
@@ -35,6 +40,10 @@ createRoot(document.getElementById("root")!).render(
               <Route path="products">
                 <Route index element={<Products />} />
                 <Route path=":id" element={<Product />} />
+              </Route>
+              <Route path="vouchers">
+                <Route index element={<Vouchers />} />
+                <Route path=":id" element={<Voucher />} />
               </Route>
               <Route path="cart" element={<Cart />} />
               <Route path="orders">

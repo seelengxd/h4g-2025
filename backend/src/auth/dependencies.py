@@ -5,9 +5,15 @@ from passlib.context import CryptContext
 from datetime import datetime, timedelta, timezone
 from fastapi import Cookie, Depends, HTTPException, Request, status
 from sqlalchemy import select
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, selectinload, joinedload
+from src.auctions.models import Bid
+from src.audit_logs.models import AuditLog
 from src.common.database import engine
+from src.orders.models import Order, OrderProduct
+from src.voucher_task.models import TaskUser
 from .models import Role, User
+from src.transactions.models import Transaction
+
 import jwt
 from jwt.exceptions import InvalidTokenError
 from src.common.constants import SECRET_KEY
@@ -47,7 +53,32 @@ def get_password_hash(password: str):
 
 def authenticate_user(username: str, password: str):
     with Session(engine) as session:
-        user = session.scalars(select(User).where(User.username == username)).first()
+        user = session.scalars(
+            select(User)
+            .where(User.username == username)
+            .options(
+                joinedload(User.transactions)
+                .joinedload(Transaction.order)
+                .joinedload(Order.logs)
+                .joinedload(AuditLog.log_user),
+                joinedload(User.transactions)
+                .joinedload(Transaction.order)
+                .joinedload(Order.order_products)
+                .joinedload(OrderProduct.product),
+                joinedload(User.transactions)
+                .joinedload(Transaction.order)
+                .joinedload(Order.user),
+                joinedload(User.transactions)
+                .joinedload(Transaction.task_user)
+                .joinedload(TaskUser.task),
+                joinedload(User.transactions)
+                .joinedload(Transaction.bid)
+                .joinedload(Bid.auction),
+                joinedload(User.transactions)
+                .joinedload(Transaction.bid)
+                .joinedload(Bid.user),
+            )
+        ).first()
         if not user:
             raise HTTPException(
                 status_code=HTTPStatus.UNAUTHORIZED,
@@ -98,7 +129,35 @@ async def add_current_user(
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
         id = payload.get("sub")
         with Session(engine) as session:
-            user = session.scalar(select(User).where(User.id == int(id)))
+            user = session.scalar(
+                select(User)
+                .where(User.id == int(id))
+                .options(
+                    joinedload(User.transactions)
+                    .joinedload(Transaction.order)
+                    .joinedload(Order.logs)
+                    .joinedload(AuditLog.log_user),
+                    joinedload(User.transactions)
+                    .joinedload(Transaction.order)
+                    .joinedload(Order.order_products)
+                    .joinedload(OrderProduct.product),
+                    joinedload(User.transactions)
+                    .joinedload(Transaction.order)
+                    .joinedload(Order.user),
+                    joinedload(User.transactions)
+                    .joinedload(Transaction.task_user)
+                    .joinedload(TaskUser.task),
+                    joinedload(User.transactions)
+                    .joinedload(Transaction.task_user)
+                    .joinedload(TaskUser.user),
+                    joinedload(User.transactions)
+                    .joinedload(Transaction.bid)
+                    .joinedload(Bid.auction),
+                    joinedload(User.transactions)
+                    .joinedload(Transaction.bid)
+                    .joinedload(Bid.user),
+                )
+            )
 
         if not user:
             raise InvalidTokenError()

@@ -1,8 +1,5 @@
-from enum import Enum
-
-from sqlalchemy import ForeignKey
-from sqlalchemy.orm import Mapped, mapped_column, relationship
-
+from sqlalchemy import ForeignKey, and_
+from src.auctions.models import Bid
 from src.auth.models import User
 from src.common.base import Base
 
@@ -23,7 +20,6 @@ class Transaction(Base):
 
     # user that purchased the product/requested voucher
     user_id: Mapped[int] = mapped_column(ForeignKey("users.id"), nullable=False)
-    points: Mapped[int] = mapped_column(nullable=False)
 
     parent_type: Mapped[str] = mapped_column(nullable=False)  # ORDER | VOUCHER
     parent_id: Mapped[int] = mapped_column(nullable=False)

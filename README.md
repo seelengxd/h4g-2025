@@ -9,11 +9,9 @@
 1. Install postgres.
 2. `psql postgres`
 3. Create the database: `CREATE DATABASE minimart;` and exit (ctrl+d)
-
 4. Install [astral-uv](https://github.com/astral-sh/uv)
 5. `cd backend`
 6. `uv sync`
-
 7. `cp backend/.env.example backend/.env`
 8. `uv run alembic upgrade head`
 9. `uv run seed.py`

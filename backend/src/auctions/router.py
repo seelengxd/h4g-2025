@@ -9,6 +9,7 @@ from src.auth.dependencies import get_current_user
 from src.auth.models import User
 from src.common.dependencies import get_session
 from src.products.models import Product
+from src.transactions.models import Transaction
 
 
 router = APIRouter(prefix="/auctions", tags=["auctions"])
@@ -51,8 +52,48 @@ def create_auction(
     if not product:
         raise HTTPException(status_code=404, detail="Product not found")
 
-    auction = Auction(**data.model_dump())
+    auction = Auction(**data.model_dump(), completed=False)
     session.add(auction)
+    session.commit()
+    session.refresh(auction)
+    return auction
+
+
+@router.put("/{auction_id}")
+def complete_auction(
+    auction_id: int, session: Annotated[Session, Depends(get_session)]
+):
+    auction = session.scalar(
+        select(Auction)
+        .where(Auction.id == auction_id)
+        .options(selectinload(Auction.bids, Bid.user))
+    )
+
+    if not auction:
+        raise HTTPException(status_code=404, detail="Auction not found")
+
+    if auction.completed:
+        raise HTTPException(status_code=400, detail="Auction is already completed")
+
+    auction.completed = True
+
+    # deduct winners points
+    bids = auction.bids
+    if bids:
+        winner = max(bids, key=lambda bid: bid.points)
+        winner.user.points -= winner.points
+        transaction = Transaction(
+            user_id=winner.user_id,
+            amount=-winner.points,
+            parent_id=auction.id,
+            parent_type="bid",
+        )
+        session.add(transaction)
+
+    session.add(auction)
+    session.add(winner.user)
+    session.commit()
+
     return auction
 
 
@@ -74,6 +115,9 @@ def make_bid(
 
     if auction.completed:
         raise HTTPException(status_code=400, detail="Auction is completed")
+
+    if user.points < data.bid:
+        raise HTTPException(status_code=400, detail="Insufficient points")
 
     if data.bid < auction.reserve_price:
         raise HTTPException(status_code=400, detail="Bid is lower than reserve price")

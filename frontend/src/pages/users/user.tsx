@@ -5,7 +5,7 @@ import TransactionList from "@/features/transactions/transaction-list";
 import { getUser, useUpdateUser } from "@/features/users/queries";
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
-import { GoPerson } from "react-icons/go";
+import { UserIcon } from "lucide-react";
 import { useParams } from "react-router";
 
 const getRandomPassword = () => {
@@ -74,7 +74,7 @@ const User = () => {
             className="w-20 h-20 rounded-full"
           />
         ) : (
-          <GoPerson className="w-20 h-20" />
+          <UserIcon className="w-20 h-20" />
         )}
         <div>
           <div>

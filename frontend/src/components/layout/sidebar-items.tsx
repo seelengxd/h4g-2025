@@ -1,16 +1,24 @@
-import { HammerIcon, ShoppingBag } from "lucide-react";
-import { GoDatabase, GoGraph, GoHome, GoPeople } from "react-icons/go";
+import {
+  ChartSpline,
+  Database,
+  HammerIcon,
+  Home,
+  ShoppingBag,
+  Ticket,
+  UsersRound,
+} from "lucide-react";
 
 export const ADMIN_SIDEBAR_ITEMS = [
-  { path: "/", icon: <GoHome />, label: "Home" },
-  { path: "/users", icon: <GoPeople />, label: "Users" },
-  { path: "/products", icon: <GoDatabase />, label: "Inventory" },
+  { path: "/", icon: <Home />, label: "Home" },
+  { path: "/users", icon: <UsersRound />, label: "Users" },
+  { path: "/products", icon: <Database />, label: "Inventory" },
+  { path: "/vouchers", icon: <Ticket />, label: "Vouchers" },
   { path: "/auctions", icon: <HammerIcon />, label: "Auctions" },
-  { path: "/reports", icon: <GoGraph />, label: "Reports" },
+  { path: "/reports", icon: <ChartSpline />, label: "Reports" },
 ];
 
 export const RESIDENT_SIDEBAR_ITEMS = [
-  { path: "/", icon: <GoHome />, label: "Home" },
+  { path: "/", icon: <Home />, label: "Home" },
   { path: "/products", icon: <ShoppingBag />, label: "Shop" },
   { path: "/auctions", icon: <HammerIcon />, label: "Auctions" },
 ];

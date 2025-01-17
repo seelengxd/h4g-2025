@@ -237,6 +237,11 @@ export type VoucherTaskPublic = {
     updated_at: string;
 };
 
+export type VoucherTaskRequestCreate = {
+    user_ids: Array<(number)>;
+    state: RequestState;
+};
+
 export type VoucherTaskTransactionPublic = {
     id: number;
     amount: number;
@@ -483,7 +488,7 @@ export type JoinRequestVoucherTaskTaskIdRequestsJoinPostResponse = (unknown);
 export type JoinRequestVoucherTaskTaskIdRequestsJoinPostError = (HTTPValidationError);
 
 export type AddRequestVoucherTaskTaskIdRequestsPostData = {
-    body: ApprovalUpdate;
+    body: VoucherTaskRequestCreate;
     path: {
         task_id: number;
     };

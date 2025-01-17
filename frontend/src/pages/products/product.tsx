@@ -4,8 +4,7 @@ import { getProduct } from "@/features/products/queries";
 import UpdateProductFormDialog from "@/features/products/update-product-form";
 import { useCombinedStore } from "@/store/user/user-store-provider";
 import { useQuery } from "@tanstack/react-query";
-import { ChevronLeft, DollarSign, Luggage } from "lucide-react";
-import { GoPencil } from "react-icons/go";
+import { ChevronLeft, DollarSign, Luggage, Edit } from "lucide-react";
 import { Link, Navigate, useParams } from "react-router";
 import ProductImage from "../../features/products/product-image";
 import AuditLogTable from "@/features/audit-logs/audit-log-table";
@@ -60,7 +59,7 @@ const Product = () => {
           {isStaff && (
             <UpdateProductFormDialog product={product}>
               <Button className="mt-4">
-                <GoPencil className="w-4 h-4" />
+                <Edit className="w-4 h-4" />
                 Edit product
               </Button>
             </UpdateProductFormDialog>

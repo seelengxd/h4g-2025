@@ -13,6 +13,7 @@ from src.voucher_task.schema import (
     ApprovalUpdate,
     VoucherTaskCreate,
     VoucherTaskPublic,
+    VoucherTaskRequestCreate,
     VoucherTaskUpdate,
 )
 
@@ -131,14 +132,27 @@ def join_request(
 def add_request(
     task: Annotated[VoucherTaskPublic, Depends(retrieve_task)],
     session: Annotated[Session, Depends(get_session)],
-    data: ApprovalUpdate,
+    data: VoucherTaskRequestCreate,
 ):
     task_users = [
-        TaskUser(user_id=user_id, state=RequestState.PENDING)
-        for user_id in data.task_user_ids
+        TaskUser(user_id=user_id, state=data.state) for user_id in data.user_ids
     ]
     task.task_users.extend(task_users)
     session.add(task)
+    session.flush()
+
+    if data.state == RequestState.APPROVED:
+        for task_user in task_users:
+            task_user.user.points += task.points
+            transaction = Transaction(
+                user_id=task_user.user_id,
+                amount=task.points,
+                parent_id=task_user.id,
+                parent_type="task_user",
+            )
+            session.add(transaction)
+            session.add(task_user)
+
     session.commit()
     return task
 
@@ -172,7 +186,7 @@ def reject_requests(
     data: ApprovalUpdate,
 ):
     for task_user in task.task_users:
-        if task_user.user_id in data.task_user_ids:
+        if task_user.id in data.task_user_ids:
             task_user.state = RequestState.REJECTED
             session.add(task_user)
     session.commit()

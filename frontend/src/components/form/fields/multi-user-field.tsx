@@ -8,39 +8,35 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { cn } from "@/lib/utils";
+import { MultiSelect } from "@/components/ui/multi-select";
+import { useQuery } from "@tanstack/react-query";
+import { getUsers } from "@/features/users/queries";
 
-type Option = {
-  label: string;
-  value: string;
-};
-
-interface SelectFieldProps {
+interface MultiUserFieldProps {
   name: string;
   label?: string;
   placeholder?: string;
   description?: string;
-  options: Option[];
-  disabled?: boolean;
+  className?: string;
   horizontal?: boolean;
 }
 
-function SelectField({
+function MultiUserField({
   name,
   label,
-  placeholder,
+  placeholder = "Select users",
   description,
-  options,
-  disabled = false,
+  className,
   horizontal,
-}: SelectFieldProps) {
+}: MultiUserFieldProps) {
   const { control } = useFormContext();
+  const { data: users } = useQuery(getUsers());
+  const options = users?.map((user) => ({
+    value: user.id.toString(),
+    label: user.full_name,
+  }));
+
   return (
     <FormField
       control={control}
@@ -57,22 +53,13 @@ function SelectField({
                   {label}
                 </FormLabel>
               )}
-              <Select
+              <MultiSelect
+                options={options ?? []}
                 onValueChange={field.onChange}
-                defaultValue={field.value}
-                disabled={disabled}
-              >
-                <SelectTrigger className="w-[180px]">
-                  <SelectValue placeholder={placeholder} />
-                </SelectTrigger>
-                <SelectContent>
-                  {options.map((option) => (
-                    <SelectItem value={option.value} key={option.value}>
-                      {option.label}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+                className={cn("col-span-3", className)}
+                placeholder={placeholder}
+                {...field}
+              />
             </div>
           </FormControl>
           <FormMessage />
@@ -83,4 +70,4 @@ function SelectField({
   );
 }
 
-export default SelectField;
+export default MultiUserField;

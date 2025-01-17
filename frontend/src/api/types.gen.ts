@@ -154,6 +154,20 @@ export type ProductPublic = {
     points: number;
     total_qty: number;
     logs: Array<AuditLogPublic>;
+    order_products: Array<ProductTransactionPublic>;
+};
+
+/**
+ * This is scuffed, but its actually order product (but from product pov instead of orders)
+ */
+export type ProductTransactionPublic = {
+    id: number;
+    order_id: number;
+    user: MiniUserPublic;
+    order_state: OrderState;
+    points: number;
+    qty: number;
+    created_at: string;
 };
 
 export type RequestState = 'pending' | 'approved' | 'rejected';

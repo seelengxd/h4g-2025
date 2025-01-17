@@ -134,7 +134,8 @@ def add_request(
     data: ApprovalUpdate,
 ):
     task_users = [
-        TaskUser(user_id=user_id, state=RequestState.PENDING) for user_id in data.users
+        TaskUser(user_id=user_id, state=RequestState.PENDING)
+        for user_id in data.task_user_ids
     ]
     task.task_users.extend(task_users)
     session.add(task)

@@ -63,4 +63,14 @@ class OrderProduct(Base):
     qty: Mapped[int] = mapped_column(nullable=False)
 
     order: Mapped[Order] = relationship("Order", back_populates="order_products")
-    product: Mapped["Product"] = relationship("Product", backref="order_products")
+    product: Mapped["Product"] = relationship(
+        "Product", back_populates="order_products"
+    )
+
+    @property
+    def user(self):
+        return self.order.user
+
+    @property
+    def order_state(self):
+        return self.order.state

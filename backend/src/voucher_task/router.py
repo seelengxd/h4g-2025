@@ -33,8 +33,6 @@ def get_all_tasks(
         .where(VoucherTask.hidden == False)  # noqa: E712
         .options(selectinload(VoucherTask.task_users, TaskUser.user))
     )
-    if not user.role.is_staff():
-        query = query.where(VoucherTask.task_users.any(TaskUser.user_id == user.id))
 
     tasks = session.scalars(query).all()
     return tasks
@@ -59,11 +57,6 @@ def get_task(
 
     if not task:
         raise HTTPException(status_code=404, detail="Task not found")
-
-    if not user.role.is_staff() and not any(
-        task_user.user_id == user.id for task_user in task.task_users
-    ):
-        raise HTTPException(status_code=403, detail="Forbidden")
 
     return task
 

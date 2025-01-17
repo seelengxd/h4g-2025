@@ -72,6 +72,7 @@ export type MiniOrderPublic = {
     order_products: Array<OrderProductPublic>;
     state: OrderState;
     user: MiniUserPublic;
+    created_at: string;
 };
 
 export type MiniProductPublic = {
@@ -111,6 +112,7 @@ export type OrderPublic = {
     order_products: Array<OrderProductPublic>;
     state: OrderState;
     user: MiniUserPublic;
+    created_at: string;
     logs: Array<AuditLogPublic>;
 };
 
@@ -522,3 +524,9 @@ export type UnrejectRequestsVoucherTaskTaskIdRequestsUnrejectPutData = {
 export type UnrejectRequestsVoucherTaskTaskIdRequestsUnrejectPutResponse = (unknown);
 
 export type UnrejectRequestsVoucherTaskTaskIdRequestsUnrejectPutError = (HTTPValidationError);
+
+export type GetAllReportsReportsGetData = unknown;
+
+export type GetAllReportsReportsGetResponse = (Array<MiniOrderPublic>);
+
+export type GetAllReportsReportsGetError = (HTTPValidationError);

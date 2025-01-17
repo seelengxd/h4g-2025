@@ -59,7 +59,7 @@ const OrderCard: React.FC<OwnProps> = ({ order }) => {
               />
               <div className="flex flex-col ml-6 w-full">
                 <p className="mb-1 line-clamp-1 overflow-ellipsis">
-                  {orderProduct.product.name}sss ssssss sss sss sss
+                  {orderProduct.product.name}
                 </p>
                 <div className="text-sm flex items-center gap-2">
                   <span className="text-muted-foreground line-clamp-1">

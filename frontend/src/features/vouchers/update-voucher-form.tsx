@@ -22,9 +22,11 @@ import {
 import { VoucherQueryKeys } from "@/features/vouchers/queries";
 import NumberField from "@/components/form/fields/number-field";
 import ErrorAlert from "@/components/form/fields/error-alert";
+import TextareaField from "@/components/form/fields/textarea-field";
 
 const updateVoucherTaskFormSchema = z.object({
   task_name: z.string().nonempty("Task name is required"),
+  description: z.string().optional(),
   points: z.coerce
     .number()
     .int("Points must be an integer")
@@ -48,6 +50,7 @@ const UpdateVoucherTaskFormDialog: React.FC<
     defaultValues: {
       task_name: voucherTask.task_name,
       points: voucherTask.points,
+      description: voucherTask.description || "",
     },
   });
 
@@ -89,6 +92,11 @@ const UpdateVoucherTaskFormDialog: React.FC<
               {error && <ErrorAlert message={error} />}
               <TextField name="task_name" label="Task name" horizontal />
               <NumberField name="points" label="Points" horizontal />
+              <TextareaField
+                name="description"
+                label="Description"
+                horizontal
+              />
             </div>
             <DialogFooter>
               <Button type="submit">Save</Button>

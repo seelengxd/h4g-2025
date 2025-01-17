@@ -12,6 +12,7 @@ from src.voucher_task.models import RequestState, TaskUser, VoucherTask
 from src.voucher_task.schema import (
     ApprovalUpdate,
     VoucherTaskCreate,
+    VoucherTaskJoinRequest,
     VoucherTaskPublic,
     VoucherTaskRequestCreate,
     VoucherTaskUpdate,
@@ -68,7 +69,9 @@ def add_task(
     data: VoucherTaskCreate,
     session: Annotated[Session, Depends(get_session)],
 ) -> VoucherTaskPublic:
-    task = VoucherTask(task_name=data.task_name, points=data.points)
+    task = VoucherTask(
+        task_name=data.task_name, points=data.points, description=data.description
+    )
     if data.task_users:
         task.task_users = [
             TaskUser(user_id=user_id, state=RequestState.PENDING)
@@ -120,8 +123,11 @@ def join_request(
     session: Annotated[Session, Depends(get_session)],
     user: Annotated[User, Depends(get_current_user)],
     task: Annotated[VoucherTaskPublic, Depends(retrieve_task)],
+    data: VoucherTaskJoinRequest,
 ):
-    task_user = TaskUser(user_id=user.id, state=RequestState.PENDING)
+    task_user = TaskUser(
+        user_id=user.id, state=RequestState.PENDING, justification=data.justification
+    )
     task.task_users.append(task_user)
     session.add(task_user)
     session.commit()
@@ -135,7 +141,8 @@ def add_request(
     data: VoucherTaskRequestCreate,
 ):
     task_users = [
-        TaskUser(user_id=user_id, state=data.state) for user_id in data.user_ids
+        TaskUser(user_id=user_id, state=data.state, justification=data.justification)
+        for user_id in data.user_ids
     ]
     task.task_users.extend(task_users)
     session.add(task)

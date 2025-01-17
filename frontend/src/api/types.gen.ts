@@ -83,12 +83,37 @@ export type MiniProductPublic = {
     total_qty: number;
 };
 
+export type MiniTaskUserPublic = {
+    id: number;
+    task_id: number;
+    user: MiniUserPublic;
+    state: RequestState;
+    created_at: string;
+    updated_at: string;
+    justification?: (string | null);
+    transactions: Array<MiniTransactionPublic>;
+};
+
+export type MiniTransactionPublic = {
+    amount: number;
+};
+
 export type MiniUserPublic = {
     id: number;
     role: Role;
     full_name: string;
     username: string;
     image: (string | null);
+};
+
+export type MiniVoucherTaskPublic = {
+    id: number;
+    task_name: string;
+    points: number;
+    task_users: Array<MiniTaskUserPublic>;
+    created_at: string;
+    updated_at: string;
+    description?: (string | null);
 };
 
 export type OrderCreate = {
@@ -174,16 +199,6 @@ export type RequestState = 'pending' | 'approved' | 'rejected';
 
 export type Role = 'resident' | 'staff' | 'admin';
 
-export type TaskUserPublic = {
-    id: number;
-    task_id: number;
-    user: MiniUserPublic;
-    state: RequestState;
-    created_at: string;
-    updated_at: string;
-    justification?: (string | null);
-};
-
 export type Token = {
     access_token: string;
     token_type: string;
@@ -230,11 +245,15 @@ export type VoucherTaskCreate = {
     task_users: (Array<(number)> | null);
 };
 
+export type VoucherTaskJoinRequest = {
+    justification?: (string | null);
+};
+
 export type VoucherTaskPublic = {
     id: number;
     task_name: string;
     points: number;
-    task_users: Array<TaskUserPublic>;
+    task_users: Array<MiniTaskUserPublic>;
     created_at: string;
     updated_at: string;
     description?: (string | null);
@@ -242,6 +261,7 @@ export type VoucherTaskPublic = {
 
 export type VoucherTaskRequestCreate = {
     user_ids: Array<(number)>;
+    justification?: (string | null);
     state: RequestState;
 };
 
@@ -251,7 +271,7 @@ export type VoucherTaskTransactionPublic = {
     parent_id: number;
     parent_type: string;
     created_at: string;
-    task_user: TaskUserPublic;
+    task_user: MiniTaskUserPublic;
 };
 
 export type VoucherTaskUpdate = {
@@ -438,7 +458,7 @@ export type MakeBidAuctionsAuctionIdBidsPostError = (HTTPValidationError);
 
 export type GetAllTasksVoucherTaskGetData = unknown;
 
-export type GetAllTasksVoucherTaskGetResponse = (Array<VoucherTaskPublic>);
+export type GetAllTasksVoucherTaskGetResponse = (Array<MiniVoucherTaskPublic>);
 
 export type GetAllTasksVoucherTaskGetError = (HTTPValidationError);
 
@@ -446,7 +466,7 @@ export type AddTaskVoucherTaskPostData = {
     body: VoucherTaskCreate;
 };
 
-export type AddTaskVoucherTaskPostResponse = (VoucherTaskPublic);
+export type AddTaskVoucherTaskPostResponse = (MiniVoucherTaskPublic);
 
 export type AddTaskVoucherTaskPostError = (HTTPValidationError);
 
@@ -467,7 +487,7 @@ export type UpdateTaskVoucherTaskTaskIdPutData = {
     };
 };
 
-export type UpdateTaskVoucherTaskTaskIdPutResponse = (VoucherTaskPublic);
+export type UpdateTaskVoucherTaskTaskIdPutResponse = (MiniVoucherTaskPublic);
 
 export type UpdateTaskVoucherTaskTaskIdPutError = (HTTPValidationError);
 
@@ -482,6 +502,7 @@ export type DeleteTaskVoucherTaskTaskIdDeleteResponse = (unknown);
 export type DeleteTaskVoucherTaskTaskIdDeleteError = (HTTPValidationError);
 
 export type JoinRequestVoucherTaskTaskIdRequestsJoinPostData = {
+    body: VoucherTaskJoinRequest;
     path: {
         task_id: number;
     };

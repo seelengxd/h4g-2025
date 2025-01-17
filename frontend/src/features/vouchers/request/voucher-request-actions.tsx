@@ -1,11 +1,11 @@
-import { TaskUserPublic, VoucherTaskPublic } from "@/api";
+import { MiniTaskUserPublic, VoucherTaskPublic } from "@/api";
 import RejectVoucherRequestButton from "./reject-voucher-request-button";
 import UnapproveVoucherRequestButton from "./unapprove-voucher-request-button";
 import ApproveVoucherRequestButton from "./approve-voucher-request-button";
 import UnrejectVoucherRequestButton from "./unreject-voucher-request-button";
 
 interface VoucherRequestActionsProps {
-  request: TaskUserPublic;
+  request: MiniTaskUserPublic;
   task: VoucherTaskPublic;
 }
 

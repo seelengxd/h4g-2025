@@ -5,7 +5,7 @@ import NewVoucherTaskFormDialog from "@/features/vouchers/new-voucher-form";
 import { getVoucherTasks } from "@/features/vouchers/queries";
 import { useCombinedStore } from "@/store/user/user-store-provider";
 import { useQuery } from "@tanstack/react-query";
-import { ChevronRight, TicketPlus, UsersRound } from "lucide-react";
+import { ChevronRight, TicketPlus, Tickets, UsersRound } from "lucide-react";
 import { useState } from "react";
 import { Link } from "react-router";
 
@@ -65,10 +65,22 @@ const Vouchers = () => {
                   <span className="text-xl font-medium">
                     {voucher.task_name}
                   </span>
-                  <div className="flex items-center text-sm text-muted-foreground mt-2">
-                    <UsersRound className="w-4 h-4 mr-1" />
-                    {voucher.task_users.length} redemptions / requests
-                  </div>
+                  {isStaff ? (
+                    <div className="flex items-center text-sm text-muted-foreground mt-2">
+                      <UsersRound className="w-4 h-4 mr-1" />
+                      {voucher.task_users.length} redemptions / requests
+                    </div>
+                  ) : (
+                    <div className="flex items-center text-sm text-muted-foreground mt-2">
+                      <Tickets className="w-4 h-4 mr-1" />
+                      My requests:{" "}
+                      {
+                        voucher.task_users.filter(
+                          (taskUser) => taskUser.user.id === user?.id
+                        ).length
+                      }
+                    </div>
+                  )}
                 </div>
                 <div className="flex items-center justify-center px-4">
                   <ChevronRight />

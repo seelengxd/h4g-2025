@@ -20,5 +20,6 @@ export const ADMIN_SIDEBAR_ITEMS = [
 export const RESIDENT_SIDEBAR_ITEMS = [
   { path: "/", icon: <Home />, label: "Home" },
   { path: "/products", icon: <ShoppingBag />, label: "Shop" },
+  { path: "/vouchers", icon: <Ticket />, label: "Vouchers" },
   { path: "/auctions", icon: <HammerIcon />, label: "Auctions" },
 ];

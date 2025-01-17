@@ -10,20 +10,25 @@ import {
 } from "@/components/ui/table";
 import IssueVoucherTaskFormDialog from "@/features/vouchers/issue-voucher-form";
 import RequestStateChip from "@/features/vouchers/request-state-chip";
-import VoucherRequestActions from "@/features/vouchers/request/voucher-request-actions";
+import { useCombinedStore } from "@/store/user/user-store-provider";
 import { format } from "date-fns";
 import { UserRoundPlus } from "lucide-react";
 import { Link } from "react-router";
 
-interface AdminVoucherTableProps {
+interface VoucherTableProps {
   voucher: VoucherTaskPublic;
 }
 
-const AdminVoucherTable = ({ voucher }: AdminVoucherTableProps) => {
-  const pendingRequests = voucher?.task_users.filter(
+const VoucherTable = ({ voucher }: VoucherTableProps) => {
+  const user = useCombinedStore((store) => store.user);
+  const userRequests = voucher?.task_users.filter(
+    (taskUser) => taskUser.user.id === user?.id
+  );
+
+  const pendingRequests = userRequests.filter(
     (taskUser) => taskUser.state === "pending"
   );
-  const requestHistory = voucher?.task_users
+  const requestHistory = userRequests
     .filter((taskUser) => taskUser.state !== "pending")
     .sort((a, b) => (a.updated_at < b.updated_at ? 1 : -1));
 
@@ -31,7 +36,7 @@ const AdminVoucherTable = ({ voucher }: AdminVoucherTableProps) => {
     <>
       <div className="flex items-center justify-between mb-4">
         <span className="font-medium text-xl">
-          Requests ({voucher?.task_users.length})
+          My Requests ({userRequests?.length})
         </span>
         {voucher && (
           <IssueVoucherTaskFormDialog voucherTask={voucher}>
@@ -50,9 +55,8 @@ const AdminVoucherTable = ({ voucher }: AdminVoucherTableProps) => {
             <TableHeader>
               <TableRow>
                 <TableHead>Request date</TableHead>
-                <TableHead>User</TableHead>
+                <TableHead>Justification</TableHead>
                 <TableHead>State</TableHead>
-                <TableHead>Actions</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -71,9 +75,6 @@ const AdminVoucherTable = ({ voucher }: AdminVoucherTableProps) => {
                   </TableCell>
                   <TableCell className="text-wrap capitalize w-48 max-w-48">
                     <RequestStateChip state={taskUser.state} />
-                  </TableCell>
-                  <TableCell>
-                    <VoucherRequestActions request={taskUser} task={voucher} />
                   </TableCell>
                 </TableRow>
               ))}
@@ -94,10 +95,9 @@ const AdminVoucherTable = ({ voucher }: AdminVoucherTableProps) => {
             <TableHeader>
               <TableRow>
                 <TableHead>Request date</TableHead>
-                <TableHead>User</TableHead>
+                <TableHead>Justification</TableHead>
                 <TableHead>State</TableHead>
                 <TableHead>Proccessed on</TableHead>
-                <TableHead>Actions</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -129,9 +129,6 @@ const AdminVoucherTable = ({ voucher }: AdminVoucherTableProps) => {
                       ? format(taskUser.updated_at, "dd MMM yyyy hh:mm a")
                       : "-"}
                   </TableCell>
-                  <TableCell>
-                    <VoucherRequestActions request={taskUser} task={voucher} />
-                  </TableCell>
                 </TableRow>
               ))}
             </TableBody>
@@ -146,4 +143,4 @@ const AdminVoucherTable = ({ voucher }: AdminVoucherTableProps) => {
   );
 };
 
-export default AdminVoucherTable;
+export default VoucherTable;

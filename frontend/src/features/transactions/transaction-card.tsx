@@ -59,7 +59,7 @@ const TransactionCard: React.FC<OwnProps> = ({ transaction }) => {
             "text-green-600": transaction.amount > 0,
           })}
         >
-          {Math.abs(transaction.amount)} pts
+          {transaction.amount} pts
         </p>
       </Card>
     </Link>

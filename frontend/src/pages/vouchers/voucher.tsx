@@ -15,6 +15,7 @@ import { useQuery } from "@tanstack/react-query";
 import { Coins, Pencil } from "lucide-react";
 import { useParams } from "react-router";
 import AdminVoucherTable from "@/features/vouchers/admin-voucher-tables";
+import VoucherTable from "@/features/vouchers/voucher-tables";
 
 const Voucher = () => {
   const { id } = useParams<"id">();
@@ -59,6 +60,7 @@ const Voucher = () => {
       </div>
       <div className="flex flex-col mb-24">
         {isStaff && <AdminVoucherTable voucher={voucher} />}
+        {!isStaff && <VoucherTable voucher={voucher} />}
       </div>
     </div>
   );

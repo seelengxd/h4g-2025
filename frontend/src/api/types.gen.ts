@@ -28,6 +28,11 @@ export type AuditLogPublic = {
     created_at: string;
 };
 
+export type BarcodeResult = {
+    name: string;
+    image: string;
+};
+
 export type BidCreate = {
     bid: number;
 };
@@ -566,3 +571,13 @@ export type UnrejectRequestsVoucherTaskTaskIdRequestsUnrejectPutData = {
 export type UnrejectRequestsVoucherTaskTaskIdRequestsUnrejectPutResponse = (unknown);
 
 export type UnrejectRequestsVoucherTaskTaskIdRequestsUnrejectPutError = (HTTPValidationError);
+
+export type GetBarcodeBarcodeBarcodeGetData = {
+    path: {
+        barcode: string;
+    };
+};
+
+export type GetBarcodeBarcodeBarcodeGetResponse = (BarcodeResult);
+
+export type GetBarcodeBarcodeBarcodeGetError = (HTTPValidationError);

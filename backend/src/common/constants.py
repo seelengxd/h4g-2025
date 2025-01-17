@@ -18,3 +18,5 @@ FRONTEND_URL: str = _get_env_var("FRONTEND_URL", required=False)
 
 GOOGLE_EMAIL: str = _get_env_var("GOOGLE_EMAIL")
 GOOGLE_APP_PASSWORD: str = _get_env_var("GOOGLE_APP_PASSWORD")
+
+BARCODE_API_KEY: str = _get_env_var("BARCODE_API_KEY")

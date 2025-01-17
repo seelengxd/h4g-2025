@@ -3,6 +3,7 @@ import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import CartButton from "@/features/orders/cart-button";
 import NewProductFormDialog from "@/features/products/new-product-form";
+import ProductImage from "@/features/products/product-image";
 import { getProducts } from "@/features/products/queries";
 import { useCombinedStore } from "@/store/user/user-store-provider";
 import { useQuery } from "@tanstack/react-query";
@@ -56,17 +57,12 @@ const Products = () => {
             )
             .map((product) => (
               <Link to={`/products/${product.id}`} key={product.id}>
-                <Card className="p-4 w-fit">
-                  <img
-                    src={
-                      import.meta.env.VITE_BACKEND_URL +
-                      "/uploads/" +
-                      product.image
-                    }
-                    className="object-contain w-40 h-40"
-                  />
+                <Card className="h-full p-4 w-fit">
+                  <ProductImage product={product} className="w-40 h-40" />
                   <div className="mt-2 font-bold">{product.points} Pts </div>
-                  <div className="font-light">{product.name}</div>
+                  <div className="w-40 font-light leading-5">
+                    {product.name}
+                  </div>
                   {/* TODO: account for reserved qty */}
                   <div className="text-sm text-slate-500">
                     {product.total_qty} left

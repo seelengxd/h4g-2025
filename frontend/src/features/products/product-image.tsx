@@ -7,14 +7,19 @@ type OwnProps = {
 };
 
 const ProductImage: React.FC<OwnProps> = ({ product, className }) => {
-  return product.image ? (
+  if (!product.image) {
+    return <CircleHelp className={className ?? "w-20 h-20"} />;
+  }
+  const imageUrl = product.image?.startsWith("http")
+    ? product.image
+    : import.meta.env.VITE_BACKEND_URL + "/uploads/" + product.image;
+  return (
     <img
-      src={import.meta.env.VITE_BACKEND_URL + "/uploads/" + product.image}
+      src={imageUrl}
       alt="product"
-      className={className ?? "w-20 h-20"}
+      className={"object-contain " + (className ?? "w-20 h-20")}
     />
-  ) : (
-    <CircleHelp className={className ?? "w-20 h-20"} />
   );
 };
+
 export default ProductImage;

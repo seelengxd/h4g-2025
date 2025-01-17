@@ -4,7 +4,7 @@ import NewUserFormDialog from "@/features/users/new-user-form";
 import { getUsers } from "@/features/users/queries";
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
-import { GoChevronRight, GoPerson, GoPersonAdd } from "react-icons/go";
+import { ChevronRight, User, UserPlus } from "lucide-react";
 import { Link } from "react-router";
 
 const clean = (str: string) => str.toLowerCase().replace(/\s/, "");
@@ -18,7 +18,7 @@ const Users = () => {
           <h1 className="text-2xl font-light">Manage residents</h1>
           <NewUserFormDialog>
             <Button>
-              <GoPersonAdd /> Add resident
+              <UserPlus /> Add resident
             </Button>
           </NewUserFormDialog>
         </div>
@@ -52,7 +52,7 @@ const Users = () => {
                       className="w-10 h-10 rounded-full"
                     />
                   ) : (
-                    <GoPerson className="w-10 h-10" />
+                    <User className="w-10 h-10" />
                   )}
                   {/* {JSON.stringify(user)} */}
                   <div className="flex flex-col">
@@ -63,7 +63,7 @@ const Users = () => {
                 <div className="flex items-center gap-2">
                   <span className="text-slate-500">{user.points} PTS</span>
                   <Link to={`/users/${user.id}`}>
-                    <GoChevronRight className="w-6 h-6" />
+                    <ChevronRight className="w-6 h-6" />
                   </Link>
                 </div>
               </div>

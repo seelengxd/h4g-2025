@@ -18,7 +18,7 @@ type OwnProps = {
 const TransactionCard: React.FC<OwnProps> = ({ transaction }) => {
   const link =
     transaction.parent_type === "task_user"
-      ? `/tasks/${
+      ? `/vouchers/${
           (transaction as VoucherTaskTransactionPublic).task_user.task_id
         }`
       : transaction.parent_type === "bid"

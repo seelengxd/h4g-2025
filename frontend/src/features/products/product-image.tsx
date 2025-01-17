@@ -1,5 +1,5 @@
 import { MiniProductPublic } from "@/api";
-import { GoQuestion } from "react-icons/go";
+import { CircleHelp } from "lucide-react";
 
 type OwnProps = {
   product: MiniProductPublic;
@@ -14,7 +14,7 @@ const ProductImage: React.FC<OwnProps> = ({ product, className }) => {
       className={className ?? "w-20 h-20"}
     />
   ) : (
-    <GoQuestion className={className ?? "w-20 h-20"} />
+    <CircleHelp className={className ?? "w-20 h-20"} />
   );
 };
 export default ProductImage;

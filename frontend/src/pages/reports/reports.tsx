@@ -172,8 +172,7 @@ const Reports = () => {
         .length,
       special: filtered.filter((product) => product.category === "special")
         .length,
-      lowQuantity: filtered.filter((product) => product.total_qty <= quantity)
-        .length,
+      lowQuantity: filtered.filter((product) => product.total_qty <= 10).length,
     });
   };
 

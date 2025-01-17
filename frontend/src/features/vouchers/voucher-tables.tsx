@@ -10,6 +10,7 @@ import {
 } from "@/components/ui/table";
 import IssueVoucherTaskFormDialog from "@/features/vouchers/issue-voucher-form";
 import RequestStateChip from "@/features/vouchers/request-state-chip";
+import { cn } from "@/lib/utils";
 import { useCombinedStore } from "@/store/user/user-store-provider";
 import { format } from "date-fns";
 import { TicketPlus } from "lucide-react";
@@ -106,35 +107,51 @@ const VoucherTable = ({ voucher }: VoucherTableProps) => {
                 <TableHead>Request date</TableHead>
                 <TableHead>Justification</TableHead>
                 <TableHead>State</TableHead>
+                <TableHead>Points</TableHead>
                 <TableHead>Proccessed on</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
-              {requestHistory.map((taskUser) => (
-                <TableRow
-                  key={taskUser.id}
-                  className={
-                    taskUser.state === "rejected"
-                      ? "bg-zinc-100 opacity-50 hover:opacity-100"
-                      : undefined
-                  }
-                >
-                  <TableCell className="w-48 max-w-48 text-nowrap">
-                    {format(taskUser.created_at, "dd MMM yyyy hh:mm a")}
-                  </TableCell>
-                  <TableCell className="text-wrap">
-                    {taskUser.justification ?? "-"}
-                  </TableCell>
-                  <TableCell className="text-wrap capitalize w-48 max-w-48">
-                    <RequestStateChip state={taskUser.state} />
-                  </TableCell>
-                  <TableCell className="w-48 max-w-48 text-nowrap">
-                    {taskUser.updated_at
-                      ? format(taskUser.updated_at, "dd MMM yyyy hh:mm a")
-                      : "-"}
-                  </TableCell>
-                </TableRow>
-              ))}
+              {requestHistory.map((taskUser) => {
+                const nettPoints = taskUser.transactions.reduce(
+                  (acc, transaction) => acc + transaction.amount,
+                  0
+                );
+                return (
+                  <TableRow
+                    key={taskUser.id}
+                    className={
+                      taskUser.state === "rejected"
+                        ? "bg-zinc-100 opacity-50 hover:opacity-100"
+                        : undefined
+                    }
+                  >
+                    <TableCell className="w-48 max-w-48 text-nowrap">
+                      {format(taskUser.created_at, "dd MMM yyyy hh:mm a")}
+                    </TableCell>
+                    <TableCell className="text-wrap">
+                      {taskUser.justification ?? "-"}
+                    </TableCell>
+                    <TableCell className="text-wrap capitalize w-48 max-w-48">
+                      <RequestStateChip state={taskUser.state} />
+                    </TableCell>
+                    <TableCell
+                      className={cn(
+                        "w-48 max-w-48 text-nowrap",
+                        nettPoints > 0 && "text-green-700",
+                        nettPoints < 0 && "text-red-700"
+                      )}
+                    >
+                      {nettPoints}
+                    </TableCell>
+                    <TableCell className="w-48 max-w-48 text-nowrap">
+                      {taskUser.updated_at
+                        ? format(taskUser.updated_at, "dd MMM yyyy hh:mm a")
+                        : "-"}
+                    </TableCell>
+                  </TableRow>
+                );
+              })}
             </TableBody>
           </Table>
         ) : (

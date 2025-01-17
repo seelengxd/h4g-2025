@@ -1,6 +1,6 @@
 import {
   unrejectRequestsVoucherTaskTaskIdRequestsUnrejectPut,
-  TaskUserPublic,
+  MiniTaskUserPublic,
   VoucherTaskPublic,
 } from "@/api";
 import { Button } from "@/components/ui/button";
@@ -27,7 +27,7 @@ import {
 } from "@/components/ui/tooltip";
 
 interface UnrejectVoucherRequestButtonProps {
-  request: TaskUserPublic;
+  request: MiniTaskUserPublic;
   task: VoucherTaskPublic;
 }
 

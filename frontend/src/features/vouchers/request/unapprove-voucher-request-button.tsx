@@ -1,5 +1,5 @@
 import {
-  TaskUserPublic,
+  MiniTaskUserPublic,
   unapproveRequestsVoucherTaskTaskIdRequestsUnapprovePut,
   VoucherTaskPublic,
 } from "@/api";
@@ -28,7 +28,7 @@ import {
 } from "@/components/ui/tooltip";
 
 interface UnapproveVoucherRequestButtonProps {
-  request: TaskUserPublic;
+  request: MiniTaskUserPublic;
   task: VoucherTaskPublic;
 }
 

@@ -73,6 +73,9 @@ def authenticate_user(username: str, password: str):
                 .joinedload(TaskUser.task),
                 joinedload(User.transactions)
                 .joinedload(Transaction.task_user)
+                .joinedload(TaskUser.transactions),
+                joinedload(User.transactions)
+                .joinedload(Transaction.task_user)
                 .joinedload(TaskUser.user),
                 joinedload(User.transactions)
                 .joinedload(Transaction.bid)
@@ -150,6 +153,9 @@ async def add_current_user(
                     joinedload(User.transactions)
                     .joinedload(Transaction.task_user)
                     .joinedload(TaskUser.task),
+                    joinedload(User.transactions)
+                    .joinedload(Transaction.task_user)
+                    .joinedload(TaskUser.transactions),
                     joinedload(User.transactions)
                     .joinedload(Transaction.task_user)
                     .joinedload(TaskUser.user),

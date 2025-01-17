@@ -1,9 +1,13 @@
 from enum import Enum
+from typing import TYPE_CHECKING
 from sqlalchemy import and_, ForeignKey
 from src.audit_logs.models import AuditLog
 from src.common.base import Base
 from src.auth.models import User
 from sqlalchemy.orm import Mapped, relationship, mapped_column, foreign
+
+if TYPE_CHECKING:
+    from src.transactions.models import Transaction
 
 
 class VoucherTask(Base):
@@ -51,3 +55,11 @@ class TaskUser(Base):
 
     user: Mapped[User] = relationship("User", backref="task_users")
     task: Mapped[VoucherTask] = relationship("VoucherTask", back_populates="task_users")
+
+    transactions: Mapped[list["Transaction"]] = relationship(
+        "Transaction",
+        back_populates="task_user",
+        primaryjoin="and_(foreign(TaskUser.id) == Transaction.parent_id, Transaction.parent_type == 'task_user')",
+        order_by="Transaction.created_at.desc()",
+        uselist=True,
+    )

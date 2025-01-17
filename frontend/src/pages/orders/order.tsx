@@ -1,9 +1,11 @@
 import { OrderState } from "@/api";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Separator } from "@/components/ui/separator";
 import AuditLogTable from "@/features/audit-logs/audit-log-table";
 import OrderProductItem from "@/features/orders/order-product-item";
 import { getOrder, useUpdateOrder } from "@/features/orders/queries";
+import { cn } from "@/lib/utils";
 import { useCombinedStore } from "@/store/user/user-store-provider";
 import { useQuery } from "@tanstack/react-query";
 import { ChevronLeft } from "lucide-react";
@@ -50,10 +52,22 @@ const Order = () => {
           )}
         </h1>
 
-        <Badge variant={"secondary"}>{order.state}</Badge>
+        <Badge
+          variant="secondary"
+          className={cn(
+            "capitalize",
+            order.state === "pending" && "bg-amber-100 text-amber-900",
+            order.state === "claimed" && "bg-green-100 text-green-900",
+            order.state === "rejected" && "bg-red-100 text-red-900",
+            order.state === "approved" && "bg-blue-100 text-blue-900"
+          )}
+        >
+          {order.state}
+        </Badge>
       </div>
+
       <div className="mt-4">
-        <h2 className="text-lg font-light">Request details</h2>
+        <h2 className="text-lg font-medium mb-2">Request details</h2>
         <div className="flex flex-col gap-4">
           {order &&
             order.order_products.map((orderProduct) => (
@@ -64,12 +78,15 @@ const Order = () => {
             ))}
         </div>
       </div>
-      <div className="mt-4">
-        <h2 className="text-lg font-light">Manage request</h2>
+
+      <Separator className="my-8" />
+
+      <div>
+        <h2 className="text-lg font-medium mb-2">Manage request</h2>
         {order.state == "pending" &&
           user.role !== "resident" &&
           !hasSufficientStock && (
-            <p className="mb-2 text-sm text-orange-600">
+            <p className="mb-3 text-sm text-orange-600">
               *Some items in the list don't have enough stock. Please replenish
               them before fulfilling the order.
             </p>
@@ -91,7 +108,12 @@ const Order = () => {
               >
                 Approve
               </Button>
-              <Button onClick={() => updateState("rejected")}>Reject</Button>
+              <Button
+                onClick={() => updateState("rejected")}
+                variant="destructive"
+              >
+                Reject
+              </Button>
             </div>
           ))}
         {order.state === "approved" && (
@@ -100,8 +122,11 @@ const Order = () => {
           </Button>
         )}
       </div>
-      <div className="mt-4">
-        <h2 className="text-lg font-light">Request history</h2>
+
+      <Separator className="my-8" />
+
+      <div>
+        <h2 className="text-lg font-medium mb-1">Request history</h2>
         {order.logs && <AuditLogTable logs={order.logs} />}
       </div>
     </div>

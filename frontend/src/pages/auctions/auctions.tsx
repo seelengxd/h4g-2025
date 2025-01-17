@@ -28,7 +28,7 @@ const Auctions = () => {
     <>
       <div className="sticky top-0 bg-white">
         <div className="flex justify-between">
-          <h1 className="text-2xl font-light">
+          <h1 className="text-2xl font-medium">
             {isStaff ? "Manage auctions" : "Auctions"}
           </h1>
           {isStaff && (

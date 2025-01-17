@@ -1,6 +1,7 @@
 import { OrderProductPublic } from "@/api";
 import ProductImage from "../products/product-image";
 import { Link } from "react-router";
+import { Separator } from "@/components/ui/separator";
 
 type OwnProps = {
   orderProduct: OrderProductPublic;
@@ -9,22 +10,37 @@ type OwnProps = {
 const OrderProductItem: React.FC<OwnProps> = ({ orderProduct }) => {
   const hasSufficientStock = orderProduct.product.total_qty >= orderProduct.qty;
   return (
-    <div className="flex justify-between">
-      <ProductImage product={orderProduct.product} className="w-20 h-20" />
-      <div className="flex flex-col justify-center text-right">
+    <div className="flex items-start h-28">
+      <ProductImage
+        product={orderProduct.product}
+        className="h-24 w-24 min-h-24 min-w-24"
+      />
+      <div className="flex flex-col ml-6 w-full">
         <Link
           to={`/products/${orderProduct.product.id}`}
           className="hover:opacity-80"
         >
-          <span>{orderProduct.product.name}</span>
+          <p className="mb-1 line-clamp-1 overflow-ellipsis">
+            {orderProduct.product.name}
+          </p>
         </Link>
-        {hasSufficientStock ? (
-          <span className="font-light">x {orderProduct.qty}</span>
-        ) : (
-          <span className="text-orange-600">
-            x {orderProduct.qty} ({orderProduct.product.total_qty} in stock)
+        <div className="text-sm flex items-center gap-2">
+          <span className="text-muted-foreground line-clamp-1">
+            {orderProduct.product.points} points
           </span>
-        )}
+          <span>
+            x {orderProduct.qty}{" "}
+            {!hasSufficientStock && (
+              <span className="text-orange-600">
+                ({orderProduct.product.total_qty} in stock)
+              </span>
+            )}
+          </span>
+        </div>
+        <Separator className="my-2" />
+        <span className="text-sm text-muted-foreground">
+          Total: {orderProduct.product.points * orderProduct.qty} points
+        </span>
       </div>
     </div>
   );

@@ -69,7 +69,7 @@ const Auction = () => {
         />
         <div className="pl-4 md:border-l">
           <div className="flex items-baseline gap-4">
-            <h1 className="text-2xl font-light">
+            <h1 className="text-2xl font-medium">
               Auction for <span className="italic">{auction.product.name}</span>
             </h1>
           </div>

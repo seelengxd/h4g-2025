@@ -1,3 +1,4 @@
+from datetime import datetime
 from pydantic import BaseModel, ConfigDict, Field
 from datetime import datetime
 
@@ -14,6 +15,8 @@ class MiniOrderPublic(BaseModel):
     order_products: list["OrderProductPublic"]
     state: OrderState
     user: MiniUserPublic
+    created_at: datetime
+
     created_at: datetime
 
 

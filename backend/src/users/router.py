@@ -73,7 +73,7 @@ def update_user(
         user.image = data.image
     if data.password is not None:
         user.hashed_password = get_password_hash(data.password)
-    if data.points is not None:
+    if data.points is not None and data.points != user.points:
         transaction = Transaction(
             amount=data.points - user.points,
             parent_id=0,

@@ -1,3 +1,4 @@
+from datetime import datetime
 from pydantic import BaseModel, ConfigDict, Field
 
 from src.audit_logs.schemas import AuditLogPublic
@@ -13,6 +14,8 @@ class MiniOrderPublic(BaseModel):
     order_products: list["OrderProductPublic"]
     state: OrderState
     user: MiniUserPublic
+
+    created_at: datetime
 
 
 class OrderPublic(MiniOrderPublic):

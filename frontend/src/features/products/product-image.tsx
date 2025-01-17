@@ -1,4 +1,5 @@
 import { MiniProductPublic } from "@/api";
+import { cn } from "@/lib/utils";
 import { CircleHelp } from "lucide-react";
 
 type OwnProps = {
@@ -8,7 +9,16 @@ type OwnProps = {
 
 const ProductImage: React.FC<OwnProps> = ({ product, className }) => {
   if (!product.image) {
-    return <CircleHelp className={className ?? "w-20 h-20"} />;
+    return (
+      <div
+        className={cn(
+          "flex w-20 h-20 items-center justify-center bg-zinc-100 rounded text-zinc-700",
+          className
+        )}
+      >
+        <CircleHelp />
+      </div>
+    );
   }
   const imageUrl = product.image?.startsWith("http")
     ? product.image

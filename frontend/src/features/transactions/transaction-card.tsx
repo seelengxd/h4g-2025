@@ -32,18 +32,18 @@ const TransactionCard: React.FC<OwnProps> = ({ transaction }) => {
       <Card className="p-2 px-4">
         <div className="flex justify-between">
           {transaction.parent_type === "task_user" && (
-            <p className="font-semibold">
+            <p>
               Task #
               {(transaction as VoucherTaskTransactionPublic).task_user.task_id}
             </p>
           )}
           {transaction.parent_type === "bid" && (
-            <p className="font-semibold">
+            <p>
               Auction #{(transaction as BidTransactionPublic).bid.auction_id}
             </p>
           )}
           {transaction.parent_type === "order" && (
-            <p className="font-semibold">
+            <p>
               Request #{(transaction as OrderTransactionPublic).order.id}{" "}
               <span className="font-light">
                 {transaction.amount > 0 && "(Refunded)"}

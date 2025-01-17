@@ -77,6 +77,7 @@ export type MiniOrderPublic = {
     order_products: Array<OrderProductPublic>;
     state: OrderState;
     user: MiniUserPublic;
+    created_at: string;
 };
 
 export type MiniProductPublic = {
@@ -141,6 +142,7 @@ export type OrderPublic = {
     order_products: Array<OrderProductPublic>;
     state: OrderState;
     user: MiniUserPublic;
+    created_at: string;
     logs: Array<AuditLogPublic>;
 };
 

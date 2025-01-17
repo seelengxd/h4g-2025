@@ -37,6 +37,9 @@ const TransactionCard: React.FC<OwnProps> = ({ transaction }) => {
               {(transaction as VoucherTaskTransactionPublic).task_user.task_id}
             </p>
           )}
+          {transaction.parent_type === "adhoc" && (
+            <p className="font-semibold">Adhoc top-up</p>
+          )}
           {transaction.parent_type === "bid" && (
             <p className="font-semibold">
               Auction #{(transaction as BidTransactionPublic).bid.auction_id}

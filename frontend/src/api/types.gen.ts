@@ -235,6 +235,7 @@ export type UserUpdate = {
     image?: (string | null);
     suspended: boolean;
     password?: (string | null);
+    points?: (number | null);
 };
 
 export type ValidationError = {

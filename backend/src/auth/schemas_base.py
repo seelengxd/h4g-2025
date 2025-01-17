@@ -23,6 +23,7 @@ class UserCreate(BaseModel):
 class UserUpdate(UserCreate):
     suspended: bool
     password: str | None = None
+    points: int | None = None
 
 
 class PasswordResetRequestData(BaseModel):

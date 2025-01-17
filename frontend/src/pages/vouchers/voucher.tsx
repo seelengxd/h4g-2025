@@ -14,7 +14,7 @@ import { useCombinedStore } from "@/store/user/user-store-provider";
 import { useQuery } from "@tanstack/react-query";
 import { Coins, Pencil } from "lucide-react";
 import { useParams } from "react-router";
-import AdminVoucherTable from "@/features/vouchers/voucher-tables";
+import AdminVoucherTable from "@/features/vouchers/admin-voucher-tables";
 
 const Voucher = () => {
   const { id } = useParams<"id">();

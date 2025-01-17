@@ -181,6 +181,7 @@ export type TaskUserPublic = {
     state: RequestState;
     created_at: string;
     updated_at: string;
+    justification?: (string | null);
 };
 
 export type Token = {
@@ -225,6 +226,7 @@ export type ValidationError = {
 export type VoucherTaskCreate = {
     task_name: string;
     points: number;
+    description?: (string | null);
     task_users: (Array<(number)> | null);
 };
 
@@ -235,6 +237,7 @@ export type VoucherTaskPublic = {
     task_users: Array<TaskUserPublic>;
     created_at: string;
     updated_at: string;
+    description?: (string | null);
 };
 
 export type VoucherTaskRequestCreate = {
@@ -254,6 +257,7 @@ export type VoucherTaskTransactionPublic = {
 export type VoucherTaskUpdate = {
     task_name: string;
     points: number;
+    description?: (string | null);
 };
 
 export type LogInAuthLoginPostData = {

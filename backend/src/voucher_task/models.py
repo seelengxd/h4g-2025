@@ -13,7 +13,7 @@ class VoucherTask(Base):
     task_name: Mapped[str] = mapped_column(nullable=False)
     points: Mapped[int] = mapped_column(nullable=False)
     hidden: Mapped[bool] = mapped_column(server_default="false", nullable=False)
-    description: Mapped[str] = mapped_column(server_default="", nullable=False)
+    description: Mapped[str | None] = mapped_column(nullable=True)
 
     task_users: Mapped[list["TaskUser"]] = relationship(
         "TaskUser", back_populates="task"
@@ -47,6 +47,7 @@ class TaskUser(Base):
     state: Mapped[RequestState] = mapped_column(
         default=RequestState.PENDING, nullable=False
     )
+    justification: Mapped[str | None] = mapped_column(nullable=True)
 
-    user: Mapped[User] = relationship("User", backref="tasks_users")
+    user: Mapped[User] = relationship("User", backref="task_users")
     task: Mapped[VoucherTask] = relationship("VoucherTask", back_populates="task_users")

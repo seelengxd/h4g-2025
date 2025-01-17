@@ -21,6 +21,7 @@ import ErrorAlert from "@/components/form/fields/error-alert";
 
 const newVoucherTaskFormSchema = z.object({
   task_name: z.string().nonempty("Task name is required"),
+  description: z.string().optional(),
   points: z.coerce
     .number()
     .int("Points must be an integer")
@@ -74,6 +75,7 @@ const NewVoucherTaskFormDialog: React.FC<PropsWithChildren> = ({
             <div className="grid gap-4 py-4">
               {error && <ErrorAlert message={error} />}
               <TextField name="task_name" label="Task name" horizontal />
+              <TextField name="description" label="Description" horizontal />
               <NumberField name="points" label="Points" horizontal />
             </div>
             <DialogFooter>

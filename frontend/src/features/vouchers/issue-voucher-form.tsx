@@ -22,9 +22,12 @@ import { VoucherQueryKeys } from "@/features/vouchers/queries";
 import ErrorAlert from "@/components/form/fields/error-alert";
 import MultiUserField from "@/components/form/fields/multi-user-field";
 import SelectField from "@/components/form/fields/select-field";
+import TextField from "@/components/form/fields/text-field";
+import TextareaField from "@/components/form/fields/textarea-field";
 
 const issueVoucherTaskFormSchema = z.object({
   user_ids: z.array(z.coerce.number()).nonempty("Users cannot be empty"),
+  justification: z.string().optional(),
   state: z.enum(["pending", "approved", "rejected"]),
 });
 
@@ -82,6 +85,7 @@ const IssueVoucherTaskFormDialog: React.FC<
             <div className="grid gap-4 py-4">
               {error && <ErrorAlert message={error} />}
               <MultiUserField name="user_ids" label="Users" horizontal />
+
               <SelectField
                 horizontal
                 name="state"
@@ -91,6 +95,11 @@ const IssueVoucherTaskFormDialog: React.FC<
                   { label: "Approved", value: "approved" },
                   { label: "Rejected", value: "rejected" },
                 ]}
+              />
+              <TextareaField
+                name="justification"
+                label="Justification"
+                horizontal
               />
             </div>
             <DialogFooter>

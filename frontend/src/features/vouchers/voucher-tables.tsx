@@ -30,7 +30,7 @@ const AdminVoucherTable = ({ voucher }: AdminVoucherTableProps) => {
   return (
     <>
       <div className="flex items-center justify-between mb-4">
-        <span className="font-medium text-xl">
+        <span className="text-xl font-medium">
           Requests ({voucher?.task_users.length})
         </span>
         {voucher && (
@@ -42,7 +42,7 @@ const AdminVoucherTable = ({ voucher }: AdminVoucherTableProps) => {
         )}
       </div>
       <div className="flex flex-col mb-12">
-        <span className="text-lg mb-3">
+        <span className="mb-3 text-lg">
           Pending requests ({pendingRequests?.length})
         </span>
         {pendingRequests?.length ? (
@@ -51,6 +51,7 @@ const AdminVoucherTable = ({ voucher }: AdminVoucherTableProps) => {
               <TableRow>
                 <TableHead>Request date</TableHead>
                 <TableHead>User</TableHead>
+                <TableHead>Justification</TableHead>
                 <TableHead>State</TableHead>
                 <TableHead>Actions</TableHead>
               </TableRow>
@@ -69,7 +70,10 @@ const AdminVoucherTable = ({ voucher }: AdminVoucherTableProps) => {
                       {taskUser.user.username}
                     </Link>
                   </TableCell>
-                  <TableCell className="text-wrap capitalize w-48 max-w-48">
+                  <TableCell className="text-wrap">
+                    {taskUser.justification || "-"}
+                  </TableCell>
+                  <TableCell className="w-48 capitalize text-wrap max-w-48">
                     <RequestStateChip state={taskUser.state} />
                   </TableCell>
                   <TableCell>
@@ -80,13 +84,13 @@ const AdminVoucherTable = ({ voucher }: AdminVoucherTableProps) => {
             </TableBody>
           </Table>
         ) : (
-          <div className="flex w-full bg-muted px-4 py-8 rounded justify-center text-muted-foreground">
+          <div className="flex justify-center w-full px-4 py-8 rounded bg-muted text-muted-foreground">
             No pending requests
           </div>
         )}
       </div>
       <div className="flex flex-col">
-        <span className="text-lg mb-3">
+        <span className="mb-3 text-lg">
           Past requests ({requestHistory?.length})
         </span>
         {requestHistory?.length ? (
@@ -95,8 +99,9 @@ const AdminVoucherTable = ({ voucher }: AdminVoucherTableProps) => {
               <TableRow>
                 <TableHead>Request date</TableHead>
                 <TableHead>User</TableHead>
+                <TableHead>Justification</TableHead>
                 <TableHead>State</TableHead>
-                <TableHead>Proccessed on</TableHead>
+                <TableHead>Processed on</TableHead>
                 <TableHead>Actions</TableHead>
               </TableRow>
             </TableHeader>
@@ -121,7 +126,10 @@ const AdminVoucherTable = ({ voucher }: AdminVoucherTableProps) => {
                       {taskUser.user.username}
                     </Link>
                   </TableCell>
-                  <TableCell className="text-wrap capitalize w-48 max-w-48">
+                  <TableCell className="text-wrap">
+                    {taskUser.justification || "-"}
+                  </TableCell>
+                  <TableCell className="w-48 capitalize text-wrap max-w-48">
                     <RequestStateChip state={taskUser.state} />
                   </TableCell>
                   <TableCell className="w-48 max-w-48 text-nowrap">
@@ -137,7 +145,7 @@ const AdminVoucherTable = ({ voucher }: AdminVoucherTableProps) => {
             </TableBody>
           </Table>
         ) : (
-          <div className="flex w-full bg-muted px-4 py-8 rounded justify-center text-muted-foreground">
+          <div className="flex justify-center w-full px-4 py-8 rounded bg-muted text-muted-foreground">
             No past requests
           </div>
         )}

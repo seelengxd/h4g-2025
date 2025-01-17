@@ -27,8 +27,8 @@ const Voucher = () => {
   }
 
   return (
-    <div className="w-full h-full flex flex-col overflow-y-auto">
-      <div className="sticky top-0 bg-white z-50 w-full max-w-full flex-0">
+    <div className="flex flex-col w-full h-full overflow-y-auto">
+      <div className="sticky top-0 z-50 w-full max-w-full bg-white flex-0">
         <Breadcrumb className="mb-6">
           <BreadcrumbList>
             <BreadcrumbItem>
@@ -54,6 +54,7 @@ const Voucher = () => {
           <div className="flex items-center">
             <Coins className="w-4 h-4 mr-1" /> {voucher?.points} points
           </div>
+          <p>{voucher?.description}</p>
         </div>
         <Separator className="my-6" />
       </div>

@@ -19,7 +19,6 @@ import { uploadFile } from "../files/utils";
 import NumberField from "@/components/form/fields/number-field";
 import SelectField from "@/components/form/fields/select-field";
 import { DialogClose } from "@radix-ui/react-dialog";
-import BarcodeScannerComponent from "react-qr-barcode-scanner";
 import { getBarcodeBarcodeBarcodeGet } from "@/api";
 import { BarcodeIcon } from "lucide-react";
 import "react-barcode-scanner/polyfill";

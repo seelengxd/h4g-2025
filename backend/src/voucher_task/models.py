@@ -13,6 +13,7 @@ class VoucherTask(Base):
     task_name: Mapped[str] = mapped_column(nullable=False)
     points: Mapped[int] = mapped_column(nullable=False)
     hidden: Mapped[bool] = mapped_column(server_default="false", nullable=False)
+    description: Mapped[str] = mapped_column(server_default="", nullable=False)
 
     task_users: Mapped[list["TaskUser"]] = relationship(
         "TaskUser", back_populates="task"

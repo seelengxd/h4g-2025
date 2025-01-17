@@ -1,8 +1,12 @@
+from typing import TYPE_CHECKING
 from sqlalchemy import and_
 from src.audit_logs.models import AuditLog
 from src.common.base import Base
 from sqlalchemy.orm import Mapped, mapped_column, relationship, foreign
 from enum import Enum
+
+if TYPE_CHECKING:
+    from src.orders.models import OrderProduct
 
 
 class Category(str, Enum):
@@ -31,4 +35,8 @@ class Product(Base):
             id == foreign(AuditLog.parent_id), AuditLog.parent_type == "product"
         ),
         order_by="AuditLog.created_at.desc()",
+    )
+
+    order_products: Mapped[list["OrderProduct"]] = relationship(
+        "OrderProduct", back_populates="product", order_by="OrderProduct.id.desc()"
     )

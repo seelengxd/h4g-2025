@@ -22,7 +22,7 @@ const Vouchers = () => {
   }
 
   return (
-    <div className="w-full h-full flex flex-col fixed overflow-auto">
+    <div className="w-full h-full flex flex-col overflow-auto">
       <div className="sticky top-0 bg-white z-50">
         <div className="flex justify-between">
           <h1 className="text-2xl font-light">Manage vouchers</h1>

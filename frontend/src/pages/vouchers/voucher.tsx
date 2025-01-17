@@ -18,12 +18,14 @@ import {
 } from "@/components/ui/table";
 import IssueVoucherTaskFormDialog from "@/features/vouchers/issue-voucher-form";
 import { getVoucherTask } from "@/features/vouchers/queries";
+import RequestStateChip from "@/features/vouchers/request-state-chip";
 import UpdateVoucherTaskFormDialog from "@/features/vouchers/update-voucher-form";
+import VoucherRequestActions from "@/features/vouchers/request/voucher-request-actions";
 import { useCombinedStore } from "@/store/user/user-store-provider";
 import { useQuery } from "@tanstack/react-query";
 import { format } from "date-fns";
 import { Coins, Pencil, UserRoundPlus } from "lucide-react";
-import { useParams } from "react-router";
+import { Link, useParams } from "react-router";
 
 const Voucher = () => {
   const { id } = useParams<"id">();
@@ -31,7 +33,7 @@ const Voucher = () => {
   const user = useCombinedStore((store) => store.user);
 
   const isStaff = user?.role !== "resident";
-  if (!user || isLoading) {
+  if (!user || isLoading || !voucher) {
     return null;
   }
 
@@ -43,8 +45,8 @@ const Voucher = () => {
   );
 
   return (
-    <div className="w-full h-full flex flex-col fixed overflow-auto">
-      <div className="sticky top-0 bg-white z-50">
+    <div className="w-full h-full flex flex-col overflow-y-auto">
+      <div className="sticky top-0 bg-white z-50 w-full max-w-full flex-0">
         <Breadcrumb className="mb-6">
           <BreadcrumbList>
             <BreadcrumbItem>
@@ -94,7 +96,7 @@ const Voucher = () => {
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead>Date</TableHead>
+                  <TableHead>Request date</TableHead>
                   <TableHead>User</TableHead>
                   <TableHead>State</TableHead>
                   <TableHead>Actions</TableHead>
@@ -107,10 +109,21 @@ const Voucher = () => {
                       {format(taskUser.created_at, "dd MMM yyyy hh:mm a")}
                     </TableCell>
                     <TableCell className="text-wrap">
-                      {taskUser.user.username}
+                      <Link
+                        to={`/users/${taskUser.user.id}`}
+                        className="hover:underline"
+                      >
+                        {taskUser.user.username}
+                      </Link>
                     </TableCell>
                     <TableCell className="text-wrap capitalize w-48 max-w-48">
-                      {taskUser.state}
+                      <RequestStateChip state={taskUser.state} />
+                    </TableCell>
+                    <TableCell>
+                      <VoucherRequestActions
+                        request={taskUser}
+                        task={voucher}
+                      />
                     </TableCell>
                   </TableRow>
                 ))}
@@ -131,7 +144,7 @@ const Voucher = () => {
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead>Date</TableHead>
+                  <TableHead>Request date</TableHead>
                   <TableHead>User</TableHead>
                   <TableHead>State</TableHead>
                   <TableHead>Actions</TableHead>
@@ -139,15 +152,33 @@ const Voucher = () => {
               </TableHeader>
               <TableBody>
                 {requestHistory.map((taskUser) => (
-                  <TableRow key={taskUser.id}>
+                  <TableRow
+                    key={taskUser.id}
+                    className={
+                      taskUser.state === "rejected"
+                        ? "bg-zinc-100 opacity-50 hover:opacity-100"
+                        : undefined
+                    }
+                  >
                     <TableCell className="w-48 max-w-48 text-nowrap">
                       {format(taskUser.created_at, "dd MMM yyyy hh:mm a")}
                     </TableCell>
                     <TableCell className="text-wrap">
-                      {taskUser.user.username}
+                      <Link
+                        to={`/users/${taskUser.user.id}`}
+                        className="hover:underline"
+                      >
+                        {taskUser.user.username}
+                      </Link>
                     </TableCell>
                     <TableCell className="text-wrap capitalize w-48 max-w-48">
-                      {taskUser.state}
+                      <RequestStateChip state={taskUser.state} />
+                    </TableCell>
+                    <TableCell>
+                      <VoucherRequestActions
+                        request={taskUser}
+                        task={voucher}
+                      />
                     </TableCell>
                   </TableRow>
                 ))}

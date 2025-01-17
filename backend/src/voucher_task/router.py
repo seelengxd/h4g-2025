@@ -186,7 +186,7 @@ def reject_requests(
     data: ApprovalUpdate,
 ):
     for task_user in task.task_users:
-        if task_user.user_id in data.task_user_ids:
+        if task_user.id in data.task_user_ids:
             task_user.state = RequestState.REJECTED
             session.add(task_user)
     session.commit()

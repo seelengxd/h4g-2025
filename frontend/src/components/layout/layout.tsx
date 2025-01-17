@@ -5,7 +5,7 @@ import { Outlet, useLocation } from "react-router";
 import { Toaster } from "@/components/ui/toaster";
 import { getUserProfile } from "@/features/auth/queries";
 import { useCombinedStore } from "@/store/user/user-store-provider";
-import { SidebarProvider, SidebarTrigger } from "../ui/sidebar";
+import { SidebarProvider } from "../ui/sidebar";
 import AppSidebar from "./app-sidebar";
 import MobileSidebar from "./mobile-sidebar";
 

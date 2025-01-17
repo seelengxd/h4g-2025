@@ -41,7 +41,7 @@ export const useCreateProduct = () => {
   return useMutation({
     mutationFn: (data: {
       name: string;
-      image?: string;
+      image?: string | null;
       points: number;
       total_qty: number;
       category: Category;
@@ -57,7 +57,7 @@ export const useUpdateProduct = (id: number) => {
   return useMutation({
     mutationFn: (data: {
       name: string;
-      image?: string;
+      image?: string | null;
       points: number;
       total_qty: number;
       category: Category;

@@ -3,7 +3,7 @@ from datetime import timedelta
 from fastapi import Response
 from src.auth.dependencies import ACCESS_TOKEN_EXPIRE_MINUTES, create_access_token
 from src.auth.models import User
-from src.auth.schemas import Token, UserPublic
+from src.auth.schemas_base import Token, UserPublic
 from src.common.constants import FRONTEND_URL
 from src.utils.mail import send_email
 

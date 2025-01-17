@@ -4,14 +4,13 @@ import { getProduct } from "@/features/products/queries";
 import UpdateProductFormDialog from "@/features/products/update-product-form";
 import { useCombinedStore } from "@/store/user/user-store-provider";
 import { useQuery } from "@tanstack/react-query";
-import { ChevronLeft, DollarSign, Luggage, Plus } from "lucide-react";
+import { ChevronLeft, DollarSign, Luggage } from "lucide-react";
 import { GoPencil } from "react-icons/go";
 import { Link, Navigate, useParams } from "react-router";
 import ProductImage from "../../features/products/product-image";
 import AuditLogTable from "@/features/audit-logs/audit-log-table";
 import AddToCartButton from "@/features/orders/add-to-cart-button";
 
-import { format } from "date-fns/format";
 import TransactionTable from "@/features/products/transactions-table";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 

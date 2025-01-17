@@ -39,11 +39,8 @@ export const getAuction = (id: number) => {
 export const useCreateAuction = () => {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: (data: {
-      product_id: number;
-      reserve_price: number;
-      end_time: Date;
-    }) => createAuctionAuctionsPost({ body: data }),
+    mutationFn: (data: { product_id: number; reserve_price: number }) =>
+      createAuctionAuctionsPost({ body: data }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: [AuctionQueryKeys.Auctions] });
     },

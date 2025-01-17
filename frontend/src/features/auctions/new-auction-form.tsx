@@ -1,11 +1,12 @@
 import { PropsWithChildren, useState } from "react";
-import AuctionFormDialog from "./auction-form";
+import AuctionFormDialog, { AuctionForm } from "./auction-form";
 import { useCreateAuction } from "./queries";
+import { SubmitHandler } from "react-hook-form";
 
 const NewAuctionFormDialog: React.FC<PropsWithChildren> = ({ children }) => {
   const createAuctionMutation = useCreateAuction();
 
-  const onSubmit = async (data) => {
+  const onSubmit: SubmitHandler<AuctionForm> = async (data) => {
     await createAuctionMutation.mutate(
       { ...data },
       {

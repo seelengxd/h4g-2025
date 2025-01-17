@@ -12,7 +12,7 @@ import User from "./pages/users/user";
 import Products from "./pages/products/products";
 import Product from "./pages/products/product";
 import Cart from "./pages/orders/cart";
-import Home from "./pages/home/Home";
+import Home from "./pages/home/home";
 import Order from "./pages/orders/order";
 import Auctions from "./pages/auctions/auctions";
 import Auction from "./pages/auctions/auction";

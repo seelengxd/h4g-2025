@@ -1,7 +1,7 @@
-import { ProductPublic } from "@/api";
+import { MiniProductPublic } from "@/api";
 
 export interface OrderProduct {
-  product: ProductPublic;
+  product: MiniProductPublic;
   qty: number;
 }
 

@@ -5,7 +5,6 @@ import { createRoot } from "react-dom/client";
 import { BrowserRouter, Route, Routes } from "react-router";
 
 import { StoreProvider } from "@/store/store-provider.tsx";
-import AuthenticatedPage from "./components/layout/authenticated-page";
 import Layout from "./components/layout/layout";
 
 import Auction from "./pages/auctions/auction";
@@ -17,12 +16,11 @@ import Order from "./pages/orders/order";
 import Product from "./pages/products/product";
 import Products from "./pages/products/products";
 import Reports from "./pages/reports/reports";
-import User from "./pages/users/User";
-import Users from "./pages/users/Users";
+import User from "./pages/users/user";
+import Users from "./pages/users/users";
 import AuthenticatedPage from "./components/layout/authenticated-page";
 import Vouchers from "./pages/vouchers/vouchers";
 import Voucher from "./pages/vouchers/voucher";
-
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
@@ -53,8 +51,7 @@ createRoot(document.getElementById("root")!).render(
                 <Route index element={<Auctions />} />
                 <Route path=":id" element={<Auction />} />
               </Route>
-              <Route path="reports" element={<Reports />}>
-              </Route>
+              <Route path="reports" element={<Reports />}></Route>
             </Route>
           </Route>
         </Routes>

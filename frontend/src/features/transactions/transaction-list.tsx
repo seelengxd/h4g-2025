@@ -2,6 +2,7 @@ import {
   OrderTransactionPublic,
   VoucherTaskTransactionPublic,
   BidTransactionPublic,
+  BaseTransactionPublic,
 } from "@/api";
 import TransactionCard from "./transaction-card";
 
@@ -10,6 +11,7 @@ type OwnProps = {
     | BidTransactionPublic
     | OrderTransactionPublic
     | VoucherTaskTransactionPublic
+    | BaseTransactionPublic
   )[];
 };
 

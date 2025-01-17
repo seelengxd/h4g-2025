@@ -1,4 +1,5 @@
 import {
+  BaseTransactionPublic,
   BidTransactionPublic,
   OrderTransactionPublic,
   VoucherTaskTransactionPublic,
@@ -12,7 +13,8 @@ type OwnProps = {
   transaction:
     | BidTransactionPublic
     | OrderTransactionPublic
-    | VoucherTaskTransactionPublic;
+    | VoucherTaskTransactionPublic
+    | BaseTransactionPublic;
 };
 
 const TransactionCard: React.FC<OwnProps> = ({ transaction }) => {
@@ -32,13 +34,13 @@ const TransactionCard: React.FC<OwnProps> = ({ transaction }) => {
       <Card className="p-2 px-4">
         <div className="flex justify-between">
           {transaction.parent_type === "task_user" && (
-            <p className="font-semibold">
+            <p className="font-[450]">
               Task #
               {(transaction as VoucherTaskTransactionPublic).task_user.task_id}
             </p>
           )}
           {transaction.parent_type === "adhoc" && (
-            <p className="font-semibold">Adhoc top-up</p>
+            <p className="font-[450d">Adhoc top-up</p>
           )}
           {transaction.parent_type === "bid" && (
             <p className="font-semibold">
